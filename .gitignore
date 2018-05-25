@@ -1,0 +1,8 @@
+.vscode
+.tscache
+/node_modules/
+/dist/
+/public/
+/log/
+*.log
+*.tmp.txt
