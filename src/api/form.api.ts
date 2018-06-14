@@ -112,6 +112,15 @@ export class FormApi {
             });
     }
 
+    _getUrl(url: string) {
+        if (/{{.*}}/i.test(url)) {
+            let serviceName: string = url.substring(url.indexOf('{{') + 2, url.lastIndexOf('}}'));
+            let serviceUrl: string = Config.API[serviceName];
+            return url.replace('{{' + serviceName + '}}', serviceUrl);
+        }
+        return url;
+    }
+
     findFormById(req, res) {
         var index = 0;
         var fetchRows = async (rows: any[]) => {
@@ -122,13 +131,32 @@ export class FormApi {
             for (let r of rows) {
                 if (r.cols) {
                     for (let c of r.cols) {
+                        if (c.imagePath) {
+                            c.imagePath = c.imagePath.replace('{{IMAGE_PATH}}', Config.ImagePath);
+                        }
+                        if (c.api && c.api.url) {
+                            c.api.url = this._getUrl(c.api.url);
+                        }
+
                         if (c.data) {
                             if (c.data.url) {
-                                await request.get({
+                                let proxy: any = {
                                     url: `${c.data.url}`,
                                     json: true
-                                })
+                                };
+                                if (c.data.headers) {
+                                    proxy.headers = c.data.headers
+                                }
+                                await request.get(proxy)
                                     .then((data) => {
+                                        if (c.data.mapping) {
+                                            let mappings: string[] = c.data.mapping.split('.');
+                                            if (mappings.length > 1) {
+                                                for (var i = 0; i < mappings.length; i++) {
+                                                    data = data[mappings[i]];
+                                                }
+                                            }
+                                        }
                                         c.data = data;
                                     }).catch(() => {
                                         c.data = [];
@@ -144,6 +172,9 @@ export class FormApi {
                                         c.data = [];
                                     });
                             }
+                            else if (c.data.api && c.data.api.url) {
+                                c.data.api.url = this._getUrl(c.data.api.url);
+                            }
                         }
                         else {
                             c.id = index++;
@@ -153,7 +184,15 @@ export class FormApi {
             }
         };
 
-        var prepareData = (data: any): Promise<any> => {
+        var prepareData = (data: any): Promise<any> => {           
+            if (data.ds && data.ds.length > 0) {
+                for (let i of data.ds) {
+                    if (i.api && i.api.url) {
+                        i.api.url = this._getUrl(i.api.url);
+                    }
+                }
+            }
+
             var formData = data.data;
             var index = 0;
             return new Promise(async (success, error) => {
@@ -189,7 +228,7 @@ export class FormApi {
 
         this.forms.find({ id: +req.params.id })
             .toArray()
-            .then(data => {
+            .then((data: any) => {
                 if (data.length > 0) {
                     return prepareData(data[0]);
                 }

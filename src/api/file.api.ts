@@ -4,6 +4,7 @@ import * as fileUpload from 'express-fileupload';
 import * as api from '../base-api';
 
 const fs = require('fs');
+var Jimp = require("jimp");
 
 import { Config } from '../config';
 
@@ -45,7 +46,11 @@ export class FileApi {
                             reject(err);
                         }
                         names.push('/' + fileName);
-                        upload(index + 1);
+
+                        Jimp.read(dir + '/' + fileName, function (err, image) {
+                            image.scaleToFit(200, Jimp.AUTO, Jimp.RESIZE_BEZIER).write(dir + '/t/' + fileName);
+                            upload(index + 1);
+                        });
                     });
                 }
                 else {

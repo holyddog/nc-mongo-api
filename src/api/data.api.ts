@@ -18,10 +18,31 @@ export class DataApi {
         app.post('/data', (req, res) => {
             this.fetchData(req, res);
         });
+
+        app.post('/query', (req, res) => {
+            this.queryData(req, res);
+        });
         
         app.get('/data/:key', (req, res) => {
             this.getData(req, res);
         });
+    }
+
+    queryData(req, res) {
+        let bd: any = req.body;
+
+        let resultData: any[] = [];
+        eval(`this.dataDB.collection${bd.query}`)
+            .toArray()
+            .then(data => {
+                if (req.query.single == 1) {
+                    data = data[0];
+                }
+                res.json(data);
+            })
+            .catch(err => {
+                res.json(null);
+            });
     }
 
     getData(req, res) {

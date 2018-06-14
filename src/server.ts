@@ -4,6 +4,7 @@ import * as express from "express";
 import * as logger from "morgan";
 import * as path from "path";
 import * as mongodb from 'mongodb';
+import * as mssql from 'mssql';
 
 import * as fileUpload from 'express-fileupload';
 
@@ -26,6 +27,8 @@ export class Server {
     public app: express.Express;
 
     public static bootstrap(): Server {
+        const sql = require('mssql')
+
         return new Server();
     };
 
@@ -35,6 +38,15 @@ export class Server {
         this.config().then((config: any) => {
             let ncDB: mongodb.Db = config.ncDB;
             let dataDB: mongodb.Db = config.dataDB;
+            let sqlDB: mssql.ConnectionPool = config.sqlDB;
+
+            // let request: mssql.Request = new mssql.Request(sqlDB);
+            // request
+            //     .input('qty', mssql.Int, 5)
+            //     .query('select LOGIN_NAME from z_user where usr_id < @qty')
+            //     .then((data: mssql.IResult<any>) => {
+            //         console.log(data.recordset);
+            //     });
 
             new OAuth2(this.app, dataDB);
 
@@ -66,7 +78,7 @@ export class Server {
         });
     }
 
-    public config() {
+    public async config() {
         let app = this.app;
 
         app.use(cookieParser('nc-mongo-api'));
@@ -93,10 +105,17 @@ export class Server {
             })
             .then((db: mongodb.Db) => {
                 dataDB = db;
+                return new mssql.ConnectionPool(Config.MSSQL).connect();
+            })
+            .then((pool: mssql.ConnectionPool) => {                
                 return Promise.resolve({
+                    sqlDB: pool,
                     ncDB: ncDB,
                     dataDB: dataDB
                 })
+            })
+            .catch(err => {
+                console.log(err);
             });
     }
 }
