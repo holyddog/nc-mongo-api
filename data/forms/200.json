@@ -1,0 +1,30 @@
+{
+    "title": "Page 1",
+    "tbar": [{
+        "icon": "fa-plus",
+        "text": "Open Form",
+        "action": {
+            "type": "openForm",
+            "id": 201
+        }
+    }, {
+        "icon": "fa-plus",
+        "text": "Open Dialog",
+        "action": {
+            "type": "openDialog",
+            "id": 100003
+        }
+    }],
+    "data": [{
+        "container": [{
+            "rows": [{
+                "cols": [{
+                    "type": "text",
+                    "config": {
+                        "fieldLabel": "Text 1"
+                    }
+                }]
+            }]
+        }]
+    }]
+}

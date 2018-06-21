@@ -36,7 +36,6 @@ export class Server {
         this.app = express();
 
         this.config().then((config: any) => {
-            let ncDB: mongodb.Db = config.ncDB;
             let dataDB: mongodb.Db = config.dataDB;
             let sqlDB: mssql.ConnectionPool = config.sqlDB;
 
@@ -50,17 +49,15 @@ export class Server {
 
             new OAuth2(this.app, dataDB);
 
-            ncDB.collection('forms').createIndex('id', { name: 'pk', unique: true });
-
-            this.api(ncDB, dataDB);
+            this.api(dataDB);
         });
     }
 
-    public api(ncDB: mongodb.Db, dataDB: mongodb.Db) {
+    public api(dataDB: mongodb.Db) {
         let app = this.app;
         app.disable('etag');
 
-        new FormApi(ncDB, dataDB, app);
+        new FormApi(dataDB, app);
         new DataApi(dataDB, app);
         new FileApi(app);
 
@@ -97,12 +94,8 @@ export class Server {
         });
 
         let mongo = mongodb.MongoClient;
-        let ncDB: mongodb.Db, dataDB: mongodb.Db;
-        return mongo.connect(Config.MongoUri)
-            .then((db: mongodb.Db) => {
-                ncDB = db;
-                return mongo.connect(Config.MongoDataUri);
-            })
+        let dataDB: mongodb.Db;
+        return mongo.connect(Config.MongoDataUri)
             .then((db: mongodb.Db) => {
                 dataDB = db;
                 return new mssql.ConnectionPool(Config.MSSQL).connect();
@@ -110,7 +103,6 @@ export class Server {
             .then((pool: mssql.ConnectionPool) => {                
                 return Promise.resolve({
                     sqlDB: pool,
-                    ncDB: ncDB,
                     dataDB: dataDB
                 })
             })

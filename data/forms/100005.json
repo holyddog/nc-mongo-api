@@ -1,0 +1,25 @@
+{
+    "data": [{
+        "container": [{
+            "rows": [{
+                "cols": [{
+                        "cls": "col-md-6",
+                        "type": "text",
+                        "config": {
+                            "fieldLabel": "ชื่อสินค้า",
+                            "name": "name"
+                        }
+                    },
+                    {
+                        "cls": "col-md-6",
+                        "type": "number",
+                        "config": {
+                            "fieldLabel": "จำนวน",
+                            "name": "qty"
+                        }
+                    }
+                ]
+            }]
+        }]
+    }]
+}

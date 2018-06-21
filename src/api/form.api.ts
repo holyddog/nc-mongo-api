@@ -1,6 +1,7 @@
 import * as mongodb from 'mongodb';
 import * as express from 'express';
 import * as request from 'request-promise';
+import * as fs from 'fs';
 
 import * as api from '../base-api';
 import { Translation as t } from '../translate/translation';
@@ -11,17 +12,17 @@ import { ErrorModel } from '../models/error.model';
 
 export class FormApi {
     private forms: mongodb.Collection;
-    private ncDB: mongodb.Db;
     private dataDB: mongodb.Db;
 
-    constructor(ncDB: mongodb.Db, dataDB: mongodb.Db, app: express.Express) {
-        this.ncDB = ncDB;
+    constructor(dataDB: mongodb.Db, app: express.Express) {
         this.dataDB = dataDB;
-
-        this.forms = ncDB.collection('forms');
 
         app.get('/forms/:id', (req, res) => {
             this.findFormById(req, res);
+        });
+
+        app.get('/menu', (req, res) => {
+            this.findMenu(req, res);
         });
 
         app.post('/forms', (req, res) => {
@@ -121,6 +122,17 @@ export class FormApi {
         return url;
     }
 
+    findMenu(req, res) {
+        fs.readFile('data/menu.json', 'utf8', (err, data) => {
+            if (!err) {
+                res.json(JSON.parse(data));
+            }
+            else {
+                res.json({});
+            }
+        });
+    }
+
     findFormById(req, res) {
         var index = 0;
         var fetchRows = async (rows: any[]) => {
@@ -193,6 +205,23 @@ export class FormApi {
                 }
             }
 
+            if (data.save) {
+                if (data.save.insert && data.save.insert.length > 0) {
+                    for (let i of data.save.insert) {
+                        if (i.api && i.api.url) {
+                            i.api.url = this._getUrl(i.api.url);
+                        }
+                    }
+                }
+                if (data.save.update && data.save.update.length > 0) {
+                    for (let i of data.save.update) {
+                        if (i.api && i.api.url) {
+                            i.api.url = this._getUrl(i.api.url);
+                        }
+                    }
+                }
+            }
+
             var formData = data.data;
             var index = 0;
             return new Promise(async (success, error) => {
@@ -226,18 +255,33 @@ export class FormApi {
             });
         }
 
-        this.forms.find({ id: +req.params.id })
-            .toArray()
-            .then((data: any) => {
-                if (data.length > 0) {
-                    return prepareData(data[0]);
-                }
-                else {
-                    res.json(new ErrorModel(t.translate('form_not_found', req.query.lang)));
-                }
-            })
-            .then(data => {
-                res.json(data);
-            });
+        fs.readFile('data/forms/' + req.params.id + '.json', 'utf8', (err, data) => {
+            if (!err) {
+                prepareData(JSON.parse(data))
+                    .then(resultData => {
+                        res.json(resultData);
+                    })
+                    .catch(err => {
+                        res.json(err);
+                    });
+            }
+            else {
+                res.json(new ErrorModel(t.translate('form_not_found', req.query.lang)));
+            }
+        });
+
+        // this.forms.find({ id: +req.params.id })
+        //     .toArray()
+        //     .then((data: any) => {
+        //         if (data.length > 0) {
+        //             return prepareData(data[0]);
+        //         }
+        //         else {
+        //             res.json(new ErrorModel(t.translate('form_not_found', req.query.lang)));
+        //         }
+        //     })
+        //     .then(data => {
+        //         res.json(data);
+        //     });
     }
 }

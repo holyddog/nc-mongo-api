@@ -1,0 +1,29 @@
+{
+    "title": "Page 2",
+    "tbar": [{
+        "icon": "fa-address-book",
+        "text": "Button 1"
+    }, {
+        "icon": "fa-arrow-alt-circle-down",
+        "text": "Button 2"
+    }],
+    "data": [{
+        "container": [{
+            "rows": [{
+                "cols": [{
+                    "cls": "col-md-6",
+                    "type": "text",
+                    "config": {
+                        "fieldLabel": "Text 1"
+                    }
+                }, {
+                    "cls": "col-md-6",
+                    "type": "text",
+                    "config": {
+                        "fieldLabel": "Text 2"
+                    }
+                }]
+            }]
+        }]
+    }]
+}

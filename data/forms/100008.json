@@ -1,0 +1,98 @@
+{
+    "title": "ค้นหา Mongo Items",
+    "data": [{
+            "container": [{
+                "fieldset": {
+                    "title": "ค้นหา",
+                    "rows": [{
+                            "cols": [{
+                                    "cls": "col-md-6",
+                                    "type": "text",
+                                    "query": "{ $regex: \"^.*{{value}}.*$\", $options: \"i\" }",
+                                    "config": {
+                                        "fieldLabel": "ชื่อสินค้า",
+                                        "name": "name"
+                                    }
+                                },
+                                {
+                                    "cls": "col-md-6",
+                                    "type": "number",
+                                    "config": {
+                                        "fieldLabel": "จำนวน",
+                                        "name": "qty"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "cols": [{
+                                "type": "daterange",
+                                "config": {
+                                    "fieldLabel": "วันที่สร้าง",
+                                    "name": "cdate"
+                                }
+                            }]
+                        },
+                        {
+                            "cols": [{
+                                "type": "button",
+                                "filter": "gridItems"
+                            }]
+                        }
+                    ]
+                }
+            }]
+        },
+        {
+            "container": [{
+                "rows": [{
+                    "cols": [{
+                        "name": "gridItems",
+                        "type": "grid",
+                        "paging": {
+                            "mongo": {
+                                "collection": "items",
+                                "query": "{ id : { $nin: [25, 26, 27] } }",
+                                "filter": [
+                                    "name",
+                                    "qty",
+                                    "cdate"
+                                ]
+                            }
+                        },
+                        "columns": [{
+                                "config": {
+                                    "text": "รหัส",
+                                    "dataIndex": "id",
+                                    "width": 80
+                                }
+                            },
+                            {
+                                "config": {
+                                    "text": "ชื่อสินค้า",
+                                    "dataIndex": "name",
+                                    "flex": 1
+                                }
+                            },
+                            {
+                                "config": {
+                                    "text": "จำนวน",
+                                    "dataIndex": "qty",
+                                    "width": 100
+                                }
+                            },
+                            {
+                                "type": "date",
+                                "config": {
+                                    "text": "วันที่สร้าง",
+                                    "dataIndex": "cdate",
+                                    "width": 200
+                                }
+                            }
+                        ]
+                    }]
+                }]
+            }]
+        }
+    ]
+}

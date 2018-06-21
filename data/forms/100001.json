@@ -1,0 +1,127 @@
+{
+    "data": [{
+        "container": [{
+            "rows": [{
+                    "cols": [{
+                            "cls": "col-md-6",
+                            "type": "text",
+                            "config": {
+                                "fieldLabel": "ชื่อจริง",
+                                "name": "Firstname"
+                            }
+                        },
+                        {
+                            "cls": "col-md-6",
+                            "type": "text",
+                            "config": {
+                                "fieldLabel": "นามสกุล",
+                                "name": "Lastname"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "cols": [{
+                            "cls": "col-md-6",
+                            "type": "number",
+                            "config": {
+                                "fieldLabel": "จำนวน",
+                                "name": "Qty"
+                            }
+                        },
+                        {
+                            "cls": "col-md-6",
+                            "type": "date",
+                            "config": {
+                                "fieldLabel": "วันที่ลงทะเบียน",
+                                "name": "RegisDate"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "cols": [{
+                            "cls": "col-md-6",
+                            "type": "combobox",
+                            "data": {
+                                "url": "http://localhost/web/data/countries.json"
+                            },
+                            "config": {
+                                "editable": true,
+                                "fieldLabel": "ประเทศ",
+                                "displayField": "CountryName",
+                                "valueField": "CountryID",
+                                "name": "Country"
+                            }
+                        },
+                        {
+                            "cls": "col-md-6",
+                            "type": "combobox",
+                            "data": [{
+                                    "ItemID": 1,
+                                    "ItemName": "Item 1"
+                                },
+                                {
+                                    "ItemID": 2,
+                                    "ItemName": "Item 2"
+                                },
+                                {
+                                    "ItemID": 3,
+                                    "ItemName": "Item 3"
+                                }
+                            ],
+                            "config": {
+                                "fieldLabel": "สินค้า",
+                                "displayField": "ItemName",
+                                "valueField": "ItemID",
+                                "name": "Item"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "cols": [{
+                            "cls": "col-md-6",
+                            "type": "grid",
+                            "data": {
+                                "mongo": {
+                                    "query": "('m_provinces').find({}, { id: 1, name: 1 })"
+                                }
+                            },
+                            "columns": [{
+                                    "config": {
+                                        "text": "รหัส",
+                                        "dataIndex": "id",
+                                        "width": 100
+                                    }
+                                },
+                                {
+                                    "mapping": "name.th",
+                                    "config": {
+                                        "text": "ชื่อจังหวัด",
+                                        "dataIndex": "name",
+                                        "flex": 1
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "cls": "col-md-6",
+                            "type": "grid",
+                            "paging": {
+                                "collection": "items"
+                            },
+                            "columns": [{
+                                "config": {
+                                    "text": "ชื่อสินค้า",
+                                    "dataIndex": "name",
+                                    "flex": 1
+                                }
+                            }]
+                        }
+                    ]
+                }
+            ]
+        }]
+    }]
+}

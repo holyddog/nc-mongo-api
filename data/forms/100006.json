@@ -1,0 +1,113 @@
+{
+    "collection": "items",
+    "tbar": [{
+        "text": "save",
+        "action": {
+            "type": "save",
+            "data": [{
+                    "form": "name",
+                    "db": "name"
+                },
+                {
+                    "form": "qty"
+                },
+                {
+                    "type": "currency",
+                    "form": "price"
+                }
+            ]
+        }
+    }],
+    "data": [{
+        "container": [{
+            "rows": [{
+                    "cols": [{
+                            "cls": "col-md-6",
+                            "type": "text",
+                            "save": true,
+                            "config": {
+                                "fieldLabel": "ชื่อสินค้า",
+                                "name": "name"
+                            }
+                        },
+                        {
+                            "cls": "col-md-6",
+                            "type": "currency",
+                            "mapping": "price.$numberDecimal",
+                            "save": true,
+                            "config": {
+                                "fieldLabel": "ราคา",
+                                "name": "price"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "cols": [{
+                        "cls": "col-md-6",
+                        "type": "number",
+                        "save": true,
+                        "config": {
+                            "fieldLabel": "จำนวน",
+                            "name": "qty"
+                        }
+                    }]
+                },
+                {
+                    "cols": [{
+                        "type": "textarea",
+                        "save": true,
+                        "config": {
+                            "fieldLabel": "คำอธิบาย",
+                            "name": "desc"
+                        }
+                    }]
+                },
+                {
+                    "hidden": true,
+                    "cols": [{
+                            "type": "hidden",
+                            "save": true,
+                            "config": {
+                                "name": "pic"
+                            }
+                        },
+                        {
+                            "cls": "col-md-6",
+                            "type": "date",
+                            "save": true,
+                            "sysDate": true,
+                            "insertOnly": true,
+                            "config": {
+                                "name": "cdate",
+                                "fieldLabel": "วันที่สร้าง"
+                            }
+                        },
+                        {
+                            "cls": "col-md-6",
+                            "type": "date",
+                            "save": true,
+                            "sysDate": true,
+                            "updateOnly": true,
+                            "config": {
+                                "name": "edate",
+                                "fieldLabel": "วันทแก้ไข"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "cols": [{
+                        "type": "file",
+                        "save": true,
+                        "ref": "pic",
+                        "config": {
+                            "fieldLabel": "รูปสินค้า",
+                            "name": "pics"
+                        }
+                    }]
+                }
+            ]
+        }]
+    }]
+}

@@ -22,10 +22,38 @@ export class DataApi {
         app.post('/query', (req, res) => {
             this.queryData(req, res);
         });
+
+        app.post('/paging', (req, res) => {
+            this.pagingData(req, res);
+        });
         
         app.get('/data/:key', (req, res) => {
             this.getData(req, res);
         });
+    }
+
+    pagingData(req, res) {
+        let bd: any = req.body;
+
+        let limit: number = Math.max(0, parseInt(req.query.size) || 100);
+        let start: number = Math.max(0, ((parseInt(req.query.page) || 1) - 1) * limit);
+
+        let resultData: any[] = [];
+        eval(`this.dataDB.collection${bd.query}`)
+            .skip(start)
+            .limit(limit)
+            .toArray()
+            .then(data => {
+                resultData = data;
+                var count = eval(`this.dataDB.collection${bd.count}`);
+                return count;
+            })
+            .then(count => {
+                res.json({
+                    total: count,
+                    data: resultData
+                });
+            });
     }
 
     queryData(req, res) {
@@ -66,6 +94,12 @@ export class DataApi {
 
         let limit: number = Math.max(0, parseInt(req.query.size) || 100);
         let start: number = Math.max(0, ((parseInt(req.query.page) || 1) - 1) * limit);
+
+        if (bd.find) {
+            while (bd.find.indexOf('"ISODate') > -1) {
+                bd.find = bd.find.replace('"ISODate', 'new Date').replace(')"', ')');
+            }
+        }
 
         let resultData: any[] = [];
         eval(`this.dataDB.collection('${bd.collection}').find(${bd.find})`)

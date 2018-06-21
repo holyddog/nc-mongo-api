@@ -1,0 +1,70 @@
+[{
+        "link": "/dashboard",
+        "name": "Dashboard",
+        "icon": "fa-tachometer-alt",
+        "roles": [
+            "admin"
+        ]
+    },
+    {
+        "link": "/form/200",
+        "name": "Page",
+        "icon": "fa-tachometer-alt",
+        "roles": [
+            "admin"
+        ]
+    },
+    {
+        "link": "/form/100",
+        "name": "สินค้าออนไลน์",
+        "icon": "fa-shopping-cart",
+        "roles": [
+            "admin"
+        ]
+    },
+    {
+        "link": "/form/100001",
+        "name": "Form 1",
+        "icon": "fa-inbox",
+        "roles": [
+            "admin"
+        ]
+    },
+    {
+        "name": "form_group",
+        "icon": "fa-chart-bar",
+        "roles": [
+            "admin"
+        ],
+        "link": "/group",
+        "children": [{
+                "link": "/form/100002",
+                "name": "form_2",
+                "roles": [
+                    "admin"
+                ]
+            },
+            {
+                "link": "/form/100003",
+                "name": "form_3",
+                "roles": [
+                    "admin"
+                ]
+            },
+            {
+                "link": "/form/100004",
+                "name": "form_4",
+                "roles": [
+                    "admin"
+                ]
+            },
+            {
+                "link": "/form/100008",
+                "name": "Mongo Items",
+                "roles": [
+                    "admin"
+                ]
+            }
+        ]
+    }
+]

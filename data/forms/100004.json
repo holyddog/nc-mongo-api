@@ -1,0 +1,68 @@
+{
+    "tbar": [{
+        "icon": "fa-plus",
+        "text": {
+            "th": "เพิ่มสินค้า",
+            "en": "Add Product"
+        },
+        "action": {
+            "type": "link",
+            "path": "/sub-form/100006"
+        }
+    }],
+    "data": [{
+            "container": [{
+                "fieldset": {
+                    "title": "ค้นหา",
+                    "rows": [{
+                            "cols": [{
+                                    "cls": "col-md-6",
+                                    "type": "text",
+                                    "filter": "listItems",
+                                    "find": "{ $regex: \"^.*{{value}}.*$\", $options: \"i\" }",
+                                    "config": {
+                                        "fieldLabel": "ชื่อสินค้า",
+                                        "name": "name"
+                                    }
+                                },
+                                {
+                                    "cls": "col-md-6",
+                                    "type": "number",
+                                    "filter": "listItems",
+                                    "find": "{ $gte: {{value}} }",
+                                    "config": {
+                                        "fieldLabel": "จำนวน",
+                                        "name": "qty"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "cols": [{
+                                "type": "button",
+                                "filter": "listItems"
+                            }]
+                        }
+                    ]
+                }
+            }]
+        },
+        {
+            "container": [{
+                "rows": [{
+                    "cols": [{
+                        "type": "list",
+                        "name": "listItems",
+                        "tpl": "<div class=\"d-sm-flex p-2\"><div class=\"mr-0 mr-sm-3 width-100 width-sm-s\"><img onload=\"window.dispatchEvent(new Event('resize'));\" class=\"mw-100 mh-100\" src=\"{[this.toFileUrl(values.pic)]}\"/></div><div class=\"flex mt-2 mt-sm-0\"><div class=\"m-text mb-2\"><a href=\"/sub-form/100003\">{name}</a></div><div class=\"d-flex\"><div class=\"flex\">x {qty}</div><div class=\"flex\">{price.$numberDecimal}</div><div class=\"flex\">{[this.toDateTime(values.cdate)]}</div></div></div><div class=\"mt-2 mt-sm-0 ml-0 ml-sm-3 text-right\"><a routerLink=\"/sub-form/100006\" queryParams=\"{ id: {id} }\"><i class=\"fas fa-edit fa-1x mr-2\"></i>{[this.translate('edit')]}</a></div></div>",
+                        "paging": {
+                            "mongo": {
+                                "collection": "items",
+                                "find": "{ name: { $regex: \"^.*m.*$\", $options: \"i\" } }"
+                            }
+                        }
+                    }]
+                }]
+            }]
+        }
+    ]
+}

@@ -1,0 +1,104 @@
+{
+    "data": [{
+            "container": [{
+                "fieldset": {
+                    "title": "ค้นหา",
+                    "rows": [{
+                            "cols": [{
+                                    "cls": "col-md-6",
+                                    "type": "text",
+                                    "filter": "gridItems",
+                                    "find": "{ $regex: \"^.*{{value}}.*$\", $options: \"i\" }",
+                                    "config": {
+                                        "fieldLabel": "ชื่อสินค้า",
+                                        "name": "name"
+                                    }
+                                },
+                                {
+                                    "cls": "col-md-6",
+                                    "type": "number",
+                                    "filter": "gridItems",
+                                    "find": "{ $gte: {{value}} }",
+                                    "config": {
+                                        "fieldLabel": "จำนวน",
+                                        "name": "qty"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "cols": [{
+                                    "cls": "col-md-6",
+                                    "type": "combobox",
+                                    "data": {
+                                        "mongo": {
+                                            "query": "('provinces').find({}, { PROVINCE_ID: 1, PROVINCE_NAME: 1 })"
+                                        }
+                                    },
+                                    "config": {
+                                        "editable": true,
+                                        "fieldLabel": "จังหวัด 1",
+                                        "displayField": "PROVINCE_NAME",
+                                        "valueField": "PROVINCE_ID",
+                                        "name": "Province1"
+                                    }
+                                },
+                                {
+                                    "cls": "col-md-6",
+                                    "type": "combobox",
+                                    "data": {
+                                        "mongo": {
+                                            "query": "('provinces').aggregate([ { $match: { PROVINCE_ID: { $in: [111, 211] } } }, { $limit : 10 } ])"
+                                        }
+                                    },
+                                    "config": {
+                                        "editable": true,
+                                        "fieldLabel": "จังหวัด 2",
+                                        "displayField": "PROVINCE_NAME",
+                                        "valueField": "PROVINCE_ID",
+                                        "name": "Province2"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "cols": [{
+                                "type": "button",
+                                "filter": "gridItems"
+                            }]
+                        }
+                    ]
+                }
+            }]
+        },
+        {
+            "container": [{
+                "rows": [{
+                    "cols": [{
+                        "type": "grid",
+                        "name": "gridItems",
+                        "paging": {
+                            "collection": "items",
+                            "find": "{ name: { $regex: \"^.*m.*$\", $options: \"i\" } }"
+                        },
+                        "columns": [{
+                                "config": {
+                                    "text": "ชื่อสินค้า",
+                                    "dataIndex": "name",
+                                    "flex": 1
+                                }
+                            },
+                            {
+                                "config": {
+                                    "text": "จำนวน",
+                                    "dataIndex": "qty",
+                                    "width": 80
+                                }
+                            }
+                        ]
+                    }]
+                }]
+            }]
+        }
+    ]
+}

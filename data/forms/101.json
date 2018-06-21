@@ -1,0 +1,281 @@
+{
+    "tbar": [{
+        "text": "save",
+        "action": {
+            "type": "save"
+        }
+    }],
+    "pk": [
+        "item_id",
+        "id"
+    ],
+    "save": {
+        "insert": [{
+            "api": {
+                "url": "{{ECV_UAT}}/pos/item/addItemOnline?langid=1",
+                "method": "POST",
+                "params": {
+                    "user_id": "@USER_ID",
+                    "user_name": "@USER_NAME",
+                    "outlet_id": "@OUTLET_ID",
+                    "outlet_name": "@OUTLET_NAME",
+                    "member_id": "@member",
+                    "member_name": "@raw.member",
+                    "item_name": "@item_name",
+                    "item_desc": "@item_desc",
+                    "item_price": "@item_price",
+                    "item_cost": "@item_cost",
+                    "ic_id": "@ic",
+                    "ic_name": "@raw.ic",
+                    "ig_id": "@ig",
+                    "ig_name": "@raw.ig",
+                    "isg_id": "@isg",
+                    "isg_name": "@raw.isg",
+                    "cap_amt": "@cap_amt",
+                    "cap_unit_id": "@raw.cap_unit_amt",
+                    "cap_unit_name": "@raw.cap_unit_name",
+                    "sc_price_tpl": "@sc_price_tpl",
+                    "one_price": true,
+                    "pics": "@pics"
+                }
+            }
+        }],
+        "update": []
+    },
+    "ds": [{
+            "name": "ItemInfo",
+            "api": {
+                "url": "{{ECV_UAT}}/pos/item/getItemInfoOnline?langid=1",
+                "mapping": "Data",
+                "params": {
+                    "itemID": "@params.item_id"
+                },
+                "authen": true
+            }
+        },
+        {
+            "name": "ItemData",
+            "mongo": {
+                "query": "('items').find({\"id\" : {{id}} })",
+                "single": true,
+                "params": {
+                    "id": "@params.id"
+                }
+            }
+        },
+        {
+            "name": "Province",
+            "mongo": {
+                "query": "('provinces').find({\"PROVINCE_ID\" : {{id}} })",
+                "single": true,
+                "params": {
+                    "id": 111
+                }
+            }
+        }
+    ],
+    "data": [{
+        "container": [{
+            "rows": [{
+                    "cols": [{
+                            "cls": "col-md-6",
+                            "type": "text",
+                            "mapping": "ItemInfo.m_item[0].item_name",
+                            "config": {
+                                "fieldLabel": "ชื่อสินค้า",
+                                "name": "item_name"
+                            }
+                        },
+                        {
+                            "cls": "col-md-6",
+                            "type": "text",
+                            "mapping": "ItemData.name",
+                            "config": {
+                                "fieldLabel": "ชื่อสินค้า (mongo)",
+                                "name": "name"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "cols": [{
+                        "type": "text",
+                        "mapping": "Province.PROVINCE_NAME",
+                        "config": {
+                            "fieldLabel": "จังหวัด"
+                        }
+                    }]
+                },
+                {
+                    "cols": [{
+                        "type": "textarea",
+                        "mapping": "ItemInfo.m_item[0].item_desc",
+                        "config": {
+                            "fieldLabel": "รายละเอียดสินค้า",
+                            "name": "item_desc"
+                        }
+                    }]
+                },
+                {
+                    "cols": [{
+                        "type": "combobox",
+                        "data": {
+                            "api": {
+                                "url": "{{ECV_UAT}}/pos/member/getByOutlet?langid=1",
+                                "params": {
+                                    "p_outlet_id": "@OUTLET_ID"
+                                },
+                                "mapping": "Data",
+                                "authen": true
+                            }
+                        },
+                        "config": {
+                            "fieldLabel": "รายชื่อสมาชิก (ผู้ผลิต)",
+                            "displayField": "member_name",
+                            "valueField": "member_id",
+                            "name": "member"
+                        }
+                    }]
+                },
+                {
+                    "cols": [{
+                            "cls": "col-md-6",
+                            "type": "combobox",
+                            "mapping": "ItemInfo.m_item[0].ic_id",
+                            "links": [
+                                "ig"
+                            ],
+                            "data": {
+                                "api": {
+                                    "url": "{{ECV_UAT}}/pos/utility/getCategory?langid=1",
+                                    "mapping": "Data.GetCategory",
+                                    "authen": true
+                                }
+                            },
+                            "config": {
+                                "fieldLabel": "หมวดสินค้า",
+                                "displayField": "value_name",
+                                "valueField": "value_id",
+                                "name": "ic"
+                            }
+                        },
+                        {
+                            "cls": "col-md-6",
+                            "type": "combobox",
+                            "mapping": "ItemInfo.m_item[0].ig_id",
+                            "links": [
+                                "isg"
+                            ],
+                            "data": {
+                                "api": {
+                                    "url": "{{ECV_UAT}}/pos/utility/getGroup?langid=1",
+                                    "params": {
+                                        "icID": "@ic"
+                                    },
+                                    "mapping": "Data.GetGroup",
+                                    "authen": true
+                                }
+                            },
+                            "config": {
+                                "fieldLabel": "กลุ่มสินค้า",
+                                "displayField": "value_name",
+                                "valueField": "value_id",
+                                "name": "ig"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "cols": [{
+                            "cls": "col-md-6",
+                            "type": "combobox",
+                            "mapping": "ItemInfo.m_item[0].isg_id",
+                            "data": {
+                                "api": {
+                                    "url": "{{ECV_UAT}}/pos/utility/getSubgroup?langid=1",
+                                    "params": {
+                                        "igID": "@ig"
+                                    },
+                                    "mapping": "Data.GetSubGroup",
+                                    "authen": true
+                                }
+                            },
+                            "config": {
+                                "fieldLabel": "กลุ่มย่อยสินค้า",
+                                "displayField": "value_name",
+                                "valueField": "value_id",
+                                "name": "isg"
+                            }
+                        },
+                        {
+                            "cls": "col-md-6",
+                            "type": "grid",
+                            "data": {
+                                "mongo": {
+                                    "query": "('z_it_spec').aggregate([{ $match: { isg_id: 3 } }, { $unwind: \"$spec_choice\" }])"
+                                }
+                            },
+                            "autoHeight": true,
+                            "group": "it_spec_name",
+                            "config": {
+                                "autoHeight": true,
+                                "hideHeaders": true,
+                                "selModel": {
+                                    "selType": "checkboxmodel",
+                                    "checkOnly": true,
+                                    "allowDeselect": true
+                                }
+                            },
+                            "columns": [{
+                                    "config": {
+                                        "dataIndex": "it_spec_name",
+                                        "hidden": true
+                                    }
+                                },
+                                {
+                                    "mapping": "spec_choice.it_spec_ch_name",
+                                    "config": {
+                                        "text": "ตัวเลือกสินค้า",
+                                        "dataIndex": "spec_choice",
+                                        "flex": 1
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "hidden": true,
+                    "cols": [{
+                        "type": "hidden",
+                        "json": true,
+                        "config": {
+                            "name": "pic"
+                        }
+                    }]
+                },
+                {
+                    "cols": [{
+                        "type": "file",
+                        "ref": "pic",
+                        "value": {
+                            "content_id": "@content_id",
+                            "content_path": "@file_path"
+                        },
+                        "imagePath": "{{IMAGE_PATH}}/{{content_path}}",
+                        "mapping": "ItemInfo.m_item[0].pics",
+                        "api": {
+                            "url": "{{ECV_UAT}}/hq/upload/image?dbtype=1&usrid=6&outletid=144",
+                            "mapping": "Data",
+                            "authen": true
+                        },
+                        "config": {
+                            "fieldLabel": "รูปสินค้า",
+                            "name": "pics"
+                        }
+                    }]
+                }
+            ]
+        }]
+    }]
+}

@@ -1,0 +1,454 @@
+{
+
+    "data": [{
+        "container": [{
+                "rows": [{
+                    "cols": [{
+                            "cls": "col-md-6",
+                            "type": "text",
+                            "config": {
+                                "fieldLabel": "Text 1",
+                                "name": "ext_1"
+                            }
+                        },
+                        {
+                            "cls": "col-md-6",
+                            "type": "combobox",
+                            "data": [{
+                                    "ItemID": 1.0,
+                                    "ItemName": "Item 1"
+                                },
+                                {
+                                    "ItemID": 2.0,
+                                    "ItemName": "Item 2"
+                                },
+                                {
+                                    "ItemID": 3.0,
+                                    "ItemName": "Item 3"
+                                }
+                            ],
+                            "config": {
+                                "fieldLabel": "Combo 2",
+                                "displayField": "ItemName",
+                                "valueField": "ItemID",
+                                "name": "ext_2"
+                            }
+                        }
+                    ]
+                }]
+            },
+            {
+                "fieldset": {
+                    "title": "Fieldset 1",
+                    "rows": [{
+                            "cols": [{
+                                    "cls": "col-md-6",
+                                    "type": "checkbox",
+                                    "config": {
+                                        "fieldLabel": "Checkbox 3",
+                                        "name": "ext_3"
+                                    }
+                                },
+                                {
+                                    "cls": "col-md-6",
+                                    "type": "text",
+                                    "config": {
+                                        "fieldLabel": "Text 4",
+                                        "name": "ext_4"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "cols": [{
+                                    "cls": "col-md-6",
+                                    "type": "date",
+                                    "config": {
+                                        "fieldLabel": "Date 5",
+                                        "name": "ext_5"
+                                    }
+                                },
+                                {
+                                    "cls": "col-md-6",
+                                    "type": "number",
+                                    "config": {
+                                        "maxValue": 10.0,
+                                        "minValue": 0.0,
+                                        "fieldLabel": "Number 6",
+                                        "name": "ext_6"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                "rows": [{
+                    "cols": [{
+                        "type": "textarea",
+                        "config": {
+                            "fieldLabel": "TextArea 7",
+                            "name": "ext_7"
+                        }
+                    }]
+                }]
+            },
+            {
+                "tab": {
+                    "items": [{
+                            "title": "Link 1",
+                            "container": [{
+                                    "rows": [{
+                                        "cols": [{
+                                                "cls": "col-md-6",
+                                                "type": "text",
+                                                "config": {
+                                                    "fieldLabel": "Text 8",
+                                                    "name": "ext_8"
+                                                }
+                                            },
+                                            {
+                                                "cls": "col-md-6",
+                                                "type": "text",
+                                                "config": {
+                                                    "fieldLabel": "Text 9",
+                                                    "name": "ext_9"
+                                                }
+                                            }
+                                        ]
+                                    }]
+                                },
+                                {
+                                    "fieldset": {
+                                        "title": "Fieldset 2",
+                                        "rows": [{
+                                                "cols": [{
+                                                        "cls": "col-md-4",
+                                                        "type": "text",
+                                                        "config": {
+                                                            "fieldLabel": "Text 10",
+                                                            "name": "ext_10"
+                                                        }
+                                                    },
+                                                    {
+                                                        "cls": "col-md-4",
+                                                        "type": "text",
+                                                        "config": {
+                                                            "fieldLabel": "Text 11",
+                                                            "name": "ext_11"
+                                                        }
+                                                    },
+                                                    {
+                                                        "cls": "col-md-4",
+                                                        "type": "text",
+                                                        "config": {
+                                                            "fieldLabel": "Text 12",
+                                                            "name": "ext_12"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "cols": [{
+                                                        "cls": "col-md-6",
+                                                        "type": "text",
+                                                        "config": {
+                                                            "fieldLabel": "Text 13",
+                                                            "name": "ext_13"
+                                                        }
+                                                    },
+                                                    {
+                                                        "cls": "col-md-6",
+                                                        "type": "text",
+                                                        "config": {
+                                                            "fieldLabel": "Text 14",
+                                                            "name": "ext_14"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "title": "Link 2",
+                            "container": [{
+                                "rows": [{
+                                        "cols": [{
+                                                "cls": "col-md-4",
+                                                "type": "text",
+                                                "config": {
+                                                    "fieldLabel": "Text 15",
+                                                    "name": "ext_15"
+                                                }
+                                            },
+                                            {
+                                                "cls": "col-md-4",
+                                                "type": "text",
+                                                "config": {
+                                                    "fieldLabel": "Text 16",
+                                                    "name": "ext_16"
+                                                }
+                                            },
+                                            {
+                                                "cls": "col-md-4",
+                                                "type": "text",
+                                                "config": {
+                                                    "fieldLabel": "Text 17",
+                                                    "name": "ext_17"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "cols": [{
+                                                "cls": "col-md-6",
+                                                "type": "text",
+                                                "config": {
+                                                    "fieldLabel": "Text 18",
+                                                    "name": "ext_18"
+                                                }
+                                            },
+                                            {
+                                                "cls": "col-md-6",
+                                                "type": "text",
+                                                "config": {
+                                                    "fieldLabel": "Text 19",
+                                                    "name": "ext_19"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }]
+                        },
+                        {
+                            "title": "Link 3",
+                            "container": [{
+                                "fieldset": {
+                                    "title": "Fieldset 3",
+                                    "rows": [{
+                                        "cols": [{
+                                                "cls": "col-md-6",
+                                                "type": "text",
+                                                "config": {
+                                                    "fieldLabel": "Text 20",
+                                                    "name": "ext_20"
+                                                }
+                                            },
+                                            {
+                                                "cls": "col-md-6",
+                                                "type": "text",
+                                                "config": {
+                                                    "fieldLabel": "Text 21",
+                                                    "name": "ext_21"
+                                                }
+                                            }
+                                        ]
+                                    }]
+                                }
+                            }]
+                        }
+                    ]
+                }
+            },
+            {
+                "rows": [{
+                        "cols": [{
+                            "cls": "col-md-6",
+                            "type": "combobox",
+                            "links": [
+                                "m_border"
+                            ],
+                            "data": {
+                                "mongo": {
+                                    "query": "('provinces').find({\"INACTIVE\" : { $ne: true }})"
+                                }
+                            },
+                            "config": {
+                                "fieldLabel": "จังหวัด",
+                                "displayField": "PROVINCE_NAME",
+                                "valueField": "PROVINCE_ID",
+                                "name": "m_province"
+                            }
+                        }]
+                    },
+                    {
+                        "cols": [{
+                                "cls": "col-md-6",
+                                "type": "combobox",
+                                "links": [
+                                    "m_district"
+                                ],
+                                "autoLoad": false,
+                                "data": {
+                                    "mongo": {
+                                        "query": "('borders').find({\"INACTIVE\" : { $ne: true }, \"PROVINCE_ID\": {{PROVINCE_ID}} })",
+                                        "params": {
+                                            "PROVINCE_ID": "@m_province"
+                                        }
+                                    }
+                                },
+                                "config": {
+                                    "fieldLabel": "อำเภอ",
+                                    "displayField": "BORDER_NAME",
+                                    "valueField": "BORDER_ID",
+                                    "name": "m_border"
+                                }
+                            },
+                            {
+                                "cls": "col-md-6",
+                                "type": "combobox",
+                                "autoLoad": false,
+                                "data": {
+                                    "mongo": {
+                                        "query": "('districts').find({\"INACTIVE\" : { $ne: true }, \"BORDER_ID\": {{BORDER_ID}}})",
+                                        "params": {
+                                            "BORDER_ID": "@m_border"
+                                        }
+                                    }
+                                },
+                                "config": {
+                                    "fieldLabel": "ตำบล",
+                                    "displayField": "DISTRICT_NAME",
+                                    "valueField": "DISTRICT_ID",
+                                    "name": "m_district"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "cols": [{
+                            "cls": "col-md-6",
+                            "type": "combobox",
+                            "links": [
+                                "border"
+                            ],
+                            "data": {
+                                "api": {
+                                    "url": "http://27.254.138.120:3201/eComVille/POS-OnlineService/pos/utility/getProvince?langid=1",
+                                    "mapping": "Data.GetProvince",
+                                    "headers": {
+                                        "Authorization": "BI=4J43D><5CB:A"
+                                    }
+                                }
+                            },
+                            "config": {
+                                "fieldLabel": "จังหวัด",
+                                "displayField": "value_name",
+                                "valueField": "value_id",
+                                "name": "province"
+                            }
+                        }]
+                    },
+                    {
+                        "cols": [{
+                                "cls": "col-md-6",
+                                "type": "combobox",
+                                "links": [
+                                    "district"
+                                ],
+                                "autoLoad": false,
+                                "data": {
+                                    "api": {
+                                        "url": "http://27.254.138.120:3201/eComVille/POS-OnlineService/pos/utility/getBorder?langid=1",
+                                        "params": {
+                                            "province_id": "@province"
+                                        },
+                                        "mapping": "Data.GetBorder",
+                                        "headers": {
+                                            "Authorization": "BI=4J43D><5CB:A"
+                                        }
+                                    }
+                                },
+                                "config": {
+                                    "fieldLabel": "อำเภอ",
+                                    "displayField": "value_name",
+                                    "valueField": "value_id",
+                                    "name": "border"
+                                }
+                            },
+                            {
+                                "cls": "col-md-6",
+                                "type": "combobox",
+                                "autoLoad": false,
+                                "data": {
+                                    "api": {
+                                        "url": "http://27.254.138.120:3201/eComVille/POS-OnlineService/pos/utility/getDistrict?langid=1",
+                                        "params": {
+                                            "province_id": "@province",
+                                            "border_id": "@border"
+                                        },
+                                        "mapping": "Data.GetDistrict",
+                                        "headers": {
+                                            "Authorization": "BI=4J43D><5CB:A"
+                                        }
+                                    }
+                                },
+                                "config": {
+                                    "fieldLabel": "ตำบล",
+                                    "displayField": "value_name",
+                                    "valueField": "value_id",
+                                    "name": "district"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "rows": [{
+                    "cols": [{
+                            "cls": "col-md-6",
+                            "type": "checkboxgroup",
+                            "config": {
+                                "fieldLabel": "Checkbox Group 22",
+                                "defaultType": "checkboxfield",
+                                "items": [{
+                                        "boxLabel": "Checkbox 1",
+                                        "name": "ext_22-1"
+                                    },
+                                    {
+                                        "boxLabel": "Checkbox 2",
+                                        "name": "ext_22-2"
+                                    },
+                                    {
+                                        "boxLabel": "Checkbox 3",
+                                        "name": "ext_22-3"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "cls": "col-md-6",
+                            "type": "radiogroup",
+                            "config": {
+                                "fieldLabel": "Radio Group 23",
+                                "defaultType": "radiofield",
+                                "items": [{
+                                        "boxLabel": "Radio 1",
+                                        "inputValue": "r1",
+                                        "name": "ext_23"
+                                    },
+                                    {
+                                        "boxLabel": "Radio 2",
+                                        "inputValue": "r2",
+                                        "name": "ext_23"
+                                    },
+                                    {
+                                        "boxLabel": "Radio 3",
+                                        "inputValue": "r3",
+                                        "name": "ext_23"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }]
+            }
+        ]
+    }]
+}

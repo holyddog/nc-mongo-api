@@ -1,0 +1,100 @@
+{
+    "tbar": [{
+        "icon": "fa-plus",
+        "text": {
+            "th": "เพิ่มสินค้าออนไลน์",
+            "en": "Add Product"
+        },
+        "action": {
+            "type": "open",
+            "id": 101
+        }
+    }],
+    "data": [{
+        "container": [{
+                "rows": [{
+                    "cols": [{
+                        "type": "list",
+                        "tpl": {
+                            "cls": "d-sm-flex",
+                            "items": [{
+                                    "type": "image",
+                                    "dataIndex": "pic"
+                                },
+                                {
+                                    "cls": "flex",
+                                    "items": [{
+                                            "dataIndex": "item_name",
+                                            "cls": "m-text"
+                                        },
+                                        {
+                                            "cls": "d-flex",
+                                            "items": [{
+                                                    "tpl": "x {cap_amt}",
+                                                    "cls": "flex"
+                                                },
+                                                {
+                                                    "tpl": "ราคา {price} บาท",
+                                                    "cls": "flex"
+                                                },
+                                                {
+                                                    "dataIndex": "create_date",
+                                                    "type": "datetime",
+                                                    "cls": "flex"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        "data": {
+                            "api": {
+                                "url": "{{ECV_UAT}}/pos/item/getItemListOnline?langid=1",
+                                "method": "POST",
+                                "mapping": "Data.m_price_tpl_head",
+                                "params": {
+                                    "outlet_id": "@OUTLET_ID"
+                                },
+                                "authen": true
+                            }
+                        }
+                    }]
+                }]
+            },
+            {
+                "rows": [{
+                    "cols": [{
+                        "type": "grid",
+                        "data": {
+                            "api": {
+                                "url": "{{ECV_UAT}}/pos/item/getItemListOnline?langid=1",
+                                "method": "POST",
+                                "mapping": "Data.m_price_tpl_head",
+                                "params": {
+                                    "outlet_id": "@OUTLET_ID"
+                                },
+                                "authen": true
+                            }
+                        },
+                        "columns": [{
+                                "config": {
+                                    "text": "รหัส",
+                                    "dataIndex": "item_id",
+                                    "width": 100
+                                }
+                            },
+                            {
+                                "config": {
+                                    "text": "ชื่อสินค้า",
+                                    "dataIndex": "item_name",
+                                    "flex": 1
+                                }
+                            }
+                        ]
+                    }]
+                }]
+            }
+        ]
+    }]
+}
