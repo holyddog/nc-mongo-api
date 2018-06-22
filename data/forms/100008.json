@@ -68,6 +68,13 @@
                                 }
                             },
                             {
+                                "action": {
+                                    "type": "openForm",
+                                    "id": 101,
+                                    "params": {
+                                        "id": "@id"
+                                    }
+                                },
                                 "config": {
                                     "text": "ชื่อสินค้า",
                                     "dataIndex": "name",

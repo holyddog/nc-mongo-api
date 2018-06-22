@@ -9,10 +9,17 @@
         }
     }, {
         "icon": "fa-plus",
-        "text": "Open Dialog",
+        "text": "Open Dialog 1",
         "action": {
             "type": "openDialog",
             "id": 100003
+        }
+    }, {
+        "icon": "fa-plus",
+        "text": "Open Dialog 2",
+        "action": {
+            "type": "openDialog",
+            "id": 201
         }
     }],
     "data": [{

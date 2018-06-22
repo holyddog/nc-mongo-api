@@ -1,4 +1,5 @@
 {
+    "title": "เพิ่มสินค้าออนไลน์",
     "tbar": [{
         "text": "save",
         "action": {
@@ -218,7 +219,6 @@
                             "autoHeight": true,
                             "group": "it_spec_name",
                             "config": {
-                                "autoHeight": true,
                                 "hideHeaders": true,
                                 "selModel": {
                                     "selType": "checkboxmodel",
