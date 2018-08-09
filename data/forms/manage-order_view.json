@@ -1,0 +1,150 @@
+{
+    "title": "ข้อมูลคำสั่งซื้อ",
+    "pk": [
+        "e_order_id"
+    ],
+    "ds": [{
+        "name": "OrderData",
+        "mongo": {
+            "query": "('t_e_order').find({ e_order_id: {{id}} })",
+            "single": true,
+            "params": {
+                "id": "@params.e_order_id"
+            }
+        }
+    }],
+    "save": {
+        "insert": [],
+        "update": []
+    },
+    "data": [{
+        "container": [{
+            "rows": [{
+                "cols": [{
+                    "cls": "col-md-6 offset-md-6",
+                    "type": "combobox",
+                    "mapping": "OrderData.wsp_id",
+                    "data": {
+                        "mongo": {
+                            "query": "('zz_workspace').find({}, { wsp_id: 1, wsp_name: 1 })"
+                        }
+                    },
+                    "config": {
+                        "fieldLabel": "Workspace",
+                        "displayField": "wsp_name",
+                        "valueField": "wsp_id",
+                        "name": "wsp_id"
+                    }
+                }]
+            }, {
+                "cols": [{
+                    "cls": "col-md-6",
+                    "type": "text",
+                    "mapping": "OrderData.e_order_no",
+                    "config": {
+                        "fieldLabel": "เลขที่คำสั่งซื้อ",
+                        "name": "e_order_no"
+                    }
+                }, {
+                    "cls": "col-md-6",
+                    "type": "date",
+                    "mapping": "OrderData.e_order_time",
+                    "config": {
+                        "fieldLabel": "วันที่สั่งซื้อ",
+                        "name": "e_order_time"
+                    }
+                }]
+            }, {
+                "cols": [{
+                    "type": "text",
+                    "mapping": "OrderData.user_addr_entity.name",
+                    "config": {
+                        "fieldLabel": "ชื่อผู้สั่งซื้อ",
+                        "name": "user_addr_entity-name"
+                    }
+                }]
+            }, {
+                "cols": [{
+                    "type": "textarea",
+                    "mapping": "OrderData.user_addr_entity.address",
+                    "config": {
+                        "fieldLabel": "ที่อยู่สำหรับจัดส่ง",
+                        "name": "user_addr_entity-address"
+                    }
+                }]
+            }, {
+                "cols": [{
+                    "cls": "col-md-6",
+                    "type": "text",
+                    "mapping": "OrderData.user_addr_entity.tel",
+                    "config": {
+                        "fieldLabel": "หมายเลขโทรศัพท์",
+                        "name": "user_addr_entity-tel"
+                    }
+                }]
+            }, {
+                "cols": [{
+                    "cls": "col-md-6",
+                    "type": "text",
+                    "mapping": "OrderData.py_entity.py_name",
+                    "config": {
+                        "fieldLabel": "วิธีชำระเงิน",
+                        "name": "py_entity-py_name"
+                    }
+                }, {
+                    "cls": "col-md-6",
+                    "type": "currency",
+                    "mapping": "OrderData.amount",
+                    "config": {
+                        "fieldLabel": "ยอดคำสั่งซื้อ",
+                        "name": "amount"
+                    }
+                }]
+            }, {
+                "cols": [{
+                    "type": "text",
+                    "mapping": "OrderData.reg_outlet_name",
+                    "config": {
+                        "fieldLabel": "ชื่อร้านค้า",
+                        "name": "reg_outlet_name"
+                    }
+                }]
+            }, {
+                "cols": [{
+                    "type": "grid",
+                    "autoHeight": true,
+                    "mapping": "OrderData.item_entity",
+                    "columns": [{
+                            "config": {
+                                "text": "ชื่อสินค้า",
+                                "dataIndex": "item_name",
+                                "flex": 1
+                            }
+                        },
+                        {
+                            "config": {
+                                "text": "ราคา",
+                                "dataIndex": "price",
+                                "width": 150
+                            }
+                        },
+                        {
+                            "config": {
+                                "text": "จำนวน",
+                                "dataIndex": "qty",
+                                "width": 100
+                            }
+                        },
+                        {
+                            "config": {
+                                "text": "รวม",
+                                "dataIndex": "amount",
+                                "width": 200
+                            }
+                        }
+                    ]
+                }]
+            }]
+        }]
+    }]
+}

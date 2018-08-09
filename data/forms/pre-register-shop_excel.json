@@ -1,0 +1,101 @@
+{
+    "title": "นำเข้าข้อูลร้านค้าด้วย excel",
+    "tbar": [{
+        "text": "save",
+        "action": {
+            "type": "save"
+        }
+    }],
+    "save": {
+        "insert": [{
+            "mongo": {
+                "collection": "t_outlet_regis"
+            }
+        }],
+        "update": []
+    },
+    "data": [{
+        "container": [{
+            "rows": [{
+                "cols": [{
+                    "cls": "col-md-4",
+                    "type": "file",
+                    "ref": "gridSup",
+                    "excel": {
+                        "rowIndex": 0,
+                        "columns": [{
+                            "text": "OUTLET_NAME",
+                            "name": "OutletName"
+                        }, {
+                            "text": "DESCRIPTION",
+                            "name": "Description"
+                        }, {
+                            "text": "PROVINCE",
+                            "name": "Province"
+                        }]
+                    },
+                    "config": {
+                        "fieldLabel": "นำเข้าข้อมูล (.xlsx)"
+                    }
+                }]
+            }, {
+                "cols": [{
+                    "cls": "col-md-6",
+                    "type": "combobox",
+                    "data": {
+                        "mongo": {
+                            "query": "('zz_workspace').find({}, { wsp_id: 1, wsp_name: 1 })"
+                        }
+                    },
+                    "config": {
+                        "fieldLabel": "Workspace",
+                        "displayField": "wsp_name",
+                        "valueField": "wsp_id",
+                        "name": "wsp"
+                    }
+                }, {
+                    "cls": "col-md-6",
+                    "type": "combobox",
+                    "data": {
+                        "mongo": {
+                            "query": "('zz_user_type').find({}, { user_type: 1, user_type_name: 1 })"
+                        }
+                    },
+                    "config": {
+                        "fieldLabel": "ประเภทผู้ใช้งาน",
+                        "displayField": "user_type_name",
+                        "valueField": "user_type",
+                        "name": "user_type"
+                    }
+                }]
+            }, {
+                "cols": [{
+                    "name": "gridSup",
+                    "type": "grid",
+                    "columns": [{
+                            "config": {
+                                "text": "ชื่อร้านค้า",
+                                "dataIndex": "OutletName",
+                                "flex": 1
+                            }
+                        },
+                        {
+                            "config": {
+                                "text": "คำอธิบาย",
+                                "dataIndex": "Description",
+                                "flex": 1
+                            }
+                        },
+                        {
+                            "config": {
+                                "text": "ชื่อจังหวัด",
+                                "dataIndex": "Province",
+                                "width": 200
+                            }
+                        }
+                    ]
+                }]
+            }]
+        }]
+    }]
+}

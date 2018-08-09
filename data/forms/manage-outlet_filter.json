@@ -1,0 +1,192 @@
+{
+    "title": "บริหารจัดการผู้ใช้งานระบบ",
+    "tbar": [],
+    "data": [{
+            "container": [{
+                "fieldset": {
+                    "title": "ค้นหา",
+                    "rows": [{
+                            "cols": [{
+                                "cls": "col-md-6",
+                                "type": "combobox",
+                                "data": {
+                                    "mongo": {
+                                        "query": "('zz_workspace').find({}, { wsp_id: 1, wsp_name: 1 })"
+                                    }
+                                },
+                                "config": {
+                                    "fieldLabel": "Workspace",
+                                    "displayField": "wsp_name",
+                                    "valueField": "wsp_id",
+                                    "name": "wsp_id"
+                                }
+                            }, {
+                                "cls": "col-md-6",
+                                "type": "text",
+                                "config": {
+                                    "fieldLabel": "ชื่อร้านค้า",
+                                    "name": "outlet_name"
+                                }
+                            }]
+                        },
+                        {
+                            "cols": [{
+                                    "cls": "col-md-6",
+                                    "type": "combobox",
+                                    "data": {
+                                        "mongo": {
+                                            "query": "('zz_user_type').find({}, { user_type: 1, user_type_name: 1 })"
+                                        }
+                                    },
+                                    "config": {
+                                        "fieldLabel": "ประเภทผู้ใช้งาน",
+                                        "displayField": "user_type_name",
+                                        "valueField": "user_type",
+                                        "name": "user_type"
+                                    }
+                                },
+                                {
+                                    "cls": "col-md-6",
+                                    "type": "combobox",
+                                    "links": [
+                                        "border_id"
+                                    ],
+                                    "data": {
+                                        "mongo": {
+                                            "query": "('z_province').find({ inactive: { $ne: true } }, { province_id: 1, province_name: 1 })"
+                                        }
+                                    },
+                                    "config": {
+                                        "editable": true,
+                                        "fieldLabel": "จังหวัด",
+                                        "displayField": "province_name",
+                                        "valueField": "province_id",
+                                        "name": "province_id"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "cols": [{
+                                    "cls": "col-md-6",
+                                    "type": "combobox",
+                                    "links": [
+                                        "district_id"
+                                    ],
+                                    "autoLoad": false,
+                                    "data": {
+                                        "mongo": {
+                                            "query": "('z_border').find({ inactive: { $ne: true }, province_id: {{province_id}} })",
+                                            "params": {
+                                                "province_id": "@province_id"
+                                            }
+                                        }
+                                    },
+                                    "config": {
+                                        "fieldLabel": "อำเภอ",
+                                        "displayField": "border_name",
+                                        "valueField": "border_id",
+                                        "name": "border_id"
+                                    }
+                                },
+                                {
+                                    "cls": "col-md-6",
+                                    "type": "combobox",
+                                    "autoLoad": false,
+                                    "data": {
+                                        "mongo": {
+                                            "query": "('z_district').find({ inactive: { $ne: true }, border_id: {{border_id}} })",
+                                            "params": {
+                                                "border_id": "@border_id"
+                                            }
+                                        }
+                                    },
+                                    "config": {
+                                        "fieldLabel": "ตำบล",
+                                        "displayField": "district_name",
+                                        "valueField": "district_id",
+                                        "name": "district_id"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "cols": [{
+                                "type": "button",
+                                "export": true,
+                                "filter": "gridOutlets"
+                            }]
+                        }
+                    ]
+                }
+            }]
+        },
+        {
+            "container": [{
+                "rows": [{
+                    "cols": [{
+                        "type": "grid",
+                        "name": "gridOutlets",
+                        "paging": {
+                            "api": {
+                                "url": "{{ECV_UAT}}/hq/outlet/outletSearch?langid=1",
+                                "method": "POST",
+                                "mapping": "Data.Table",
+                                "total": "Data.Count[0].RowCount",
+                                "pageParams": {
+                                    "page": "page",
+                                    "limit": "limit"
+                                },
+                                "filter": [
+                                    "outlet_name",
+                                    "wsp_id",
+                                    "user_type",
+                                    "province_id",
+                                    "border_id",
+                                    "district_id"
+                                ]
+                            }
+                        },
+                        "columns": [{
+                                "config": {
+                                    "text": "รหัสผู้ใช้",
+                                    "dataIndex": "outlet_code",
+                                    "width": 100
+                                }
+                            },
+                            {
+                                "action": {
+                                    "type": "link",
+                                    "path": "/form/manage-outlet_save",
+                                    "params": {
+                                        "outlet_id": "@outlet_id",
+                                        "view": 1
+                                    }
+                                },
+                                "config": {
+                                    "text": "ชื่อผู้ใช้งาน",
+                                    "dataIndex": "outlet_name",
+                                    "flex": 1
+                                }
+                            },
+                            {
+                                "config": {
+                                    "text": "เบอร์โทรศัพท์",
+                                    "dataIndex": "mobile",
+                                    "width": 150
+                                }
+                            },
+                            {
+                                "config": {
+                                    "text": "จังหวัด",
+                                    "dataIndex": "province_name",
+                                    "width": 150
+                                }
+                            }
+                        ]
+                    }]
+                }]
+            }]
+        }
+    ]
+}

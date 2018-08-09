@@ -1,0 +1,367 @@
+{
+    "title": {
+        "edit": "แก้ไขข้อมูลร้านค้า",
+        "view": "เรียกดูข้อมูลร้านค้า"
+    },
+    "tbar": [{
+        "text": "save",
+        "action": {
+            "type": "save"
+        },
+        "visible": {
+            "view": 0
+        }
+    }],
+    "pk": [
+        "outlet_id"
+    ],
+    "ds": [{
+        "name": "OutletInfo",
+        "api": {
+            "url": "{{ECV_UAT}}/pos/outlet/getInfo?langid=1",
+            "mapping": "Data[0]",
+            "params": {
+                "outlet_id": "@params.outlet_id"
+            },
+            "authen": true
+        }
+    }],
+    "save": {
+        "insert": [],
+        "update": [{
+            "api": {
+                "url": "{{ECV_UAT}}/pos/outlet/update?langid=1",
+                "method": "POST",
+                "authen": true,
+                "params": {
+                    "outlet_id": "@params.outlet_id",
+                    "user_id": "@USER_ID",
+                    "f_name": "@f_name",
+                    "member_type": "@member_type",
+                    "wsp_id": "@wsp_id",
+                    "content_id": "@content_id",
+                    "content_path": "@content_path",
+                    "mobile": "@mobile",
+                    "outlet_name": "@outlet_name",
+                    "open_time": "@s_time",
+                    "close_time": "@e_time",
+                    "tax_id": "@tax_id",
+                    "email": "@email",
+                    "addr_no": "@addr_no",
+                    "district_id": "@district_id",
+                    "border_id": "@border_id",
+                    "province_id": "@province_id",
+                    "postcode": "@postcode",
+                    "bank_id": "@bank_id",
+                    "bank_name": "@raw.bank_id",
+                    "book_bank_code": "@book_bank_code",
+                    "book_bank_name": "@book_bank_name",
+                    "outlet_type": "@ds.OutletInfo.outlet_type"
+                }
+            }
+        }]
+    },
+    "data": [{
+        "container": [{
+            "rows": [{
+                    "cols": [{
+                        "cls": "col-md-6 offset-md-6",
+                        "type": "combobox",
+                        "mapping": "OutletInfo.wsp_id",
+                        "links": [
+                            "bank_id"
+                        ],
+                        "data": {
+                            "mongo": {
+                                "query": "('zz_workspace').find({}, { wsp_id: 1, wsp_name: 1 })"
+                            }
+                        },
+                        "config": {
+                            "fieldLabel": "Workspace",
+                            "displayField": "wsp_name",
+                            "valueField": "wsp_id",
+                            "name": "wsp_id"
+                        }
+                    }]
+                },
+                {
+                    "cols": [{
+                        "cls": "col-md-6",
+                        "type": "file",
+                        "mapping": "OutletInfo.content_path",
+                        "imagePath": "{{IMAGE_PATH}}",
+                        "config": {
+                            "name": "content_path"
+                        }
+                    }, {
+                        "cls": "col-md-6",
+                        "type": "text",
+                        "mapping": "OutletInfo.content_id",
+                        "config": {
+                            "hidden": true,
+                            "name": "content_id"
+                        }
+                    }]
+                },
+                {
+                    "cols": [{
+                        "cls": "col-md-12",
+                        "type": "text",
+                        "mapping": "OutletInfo.outlet_name",
+                        "config": {
+                            "fieldLabel": "ชื่อร้านค้า",
+                            "name": "outlet_name"
+                        }
+                    }]
+                },
+                {
+                    "cols": [{
+                            "cls": "col-md-6",
+                            "type": "time",
+                            "mapping": "OutletInfo.s_time",
+                            "config": {
+                                "fieldLabel": "เวลาเปิดร้าน",
+                                "name": "s_time"
+                            }
+                        },
+                        {
+                            "cls": "col-md-6",
+                            "type": "time",
+                            "mapping": "OutletInfo.e_time",
+                            "config": {
+                                "fieldLabel": "เวลาปิดร้าน",
+                                "name": "e_time"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "cols": [{
+                            "cls": "col-md-6",
+                            "type": "radiogroup",
+                            "config": {
+                                "fieldLabel": "ประเภทของธุรกิจ",
+                                "defaultType": "radiofield",
+                                "mapping": "OutletInfo.member_type",
+                                "name": "member_type",
+                                "items": [{
+                                        "boxLabel": "บุคคลธรรมดา",
+                                        "inputValue": 1
+                                    },
+                                    {
+                                        "boxLabel": "นิติบุคคล",
+                                        "inputValue": 2
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "cls": "col-md-6",
+                            "type": "text",
+                            "mapping": "OutletInfo.tax_id",
+                            "config": {
+                                "fieldLabel": "เลขประจำตัวผู้เสียภาษี",
+                                "name": "tax_id"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "cols": [{
+                        "type": "textarea",
+                        "mapping": "OutletInfo.addr_no",
+                        "config": {
+                            "fieldLabel": "รายละเอียดที่อยู่",
+                            "name": "addr_no"
+                        }
+                    }]
+                },
+                {
+                    "cols": [{
+                            "cls": "col-md-6",
+                            "type": "combobox",
+                            "mapping": "OutletInfo.province_id",
+                            "links": [
+                                "border_id"
+                            ],
+                            "data": {
+                                "mongo": {
+                                    "query": "('z_province').find({ inactive: { $ne: true } }, { province_id: 1, province_name: 1 })"
+                                }
+                            },
+                            "config": {
+                                "editable": true,
+                                "fieldLabel": "จังหวัด",
+                                "displayField": "province_name",
+                                "valueField": "province_id",
+                                "name": "province_id"
+                            }
+                        },
+                        {
+                            "cls": "col-md-6",
+                            "type": "combobox",
+                            "mapping": "OutletInfo.border_id",
+                            "links": [
+                                "district_id"
+                            ],
+                            "autoLoad": false,
+                            "data": {
+                                "mongo": {
+                                    "query": "('z_border').find({ inactive: { $ne: true }, province_id: {{province_id}} })",
+                                    "params": {
+                                        "province_id": "@province_id"
+                                    }
+                                }
+                            },
+                            "config": {
+                                "fieldLabel": "อำเภอ",
+                                "displayField": "border_name",
+                                "valueField": "border_id",
+                                "name": "border_id"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "cols": [{
+                            "cls": "col-md-6",
+                            "type": "combobox",
+                            "mapping": "OutletInfo.district_id",
+                            "autoLoad": false,
+                            "data": {
+                                "mongo": {
+                                    "query": "('z_district').find({ inactive: { $ne: true }, border_id: {{border_id}} })",
+                                    "params": {
+                                        "border_id": "@border_id"
+                                    }
+                                }
+                            },
+                            "config": {
+                                "fieldLabel": "ตำบล",
+                                "displayField": "district_name",
+                                "valueField": "district_id",
+                                "name": "district_id"
+                            }
+                        },
+                        {
+                            "cls": "col-md-6",
+                            "type": "text",
+                            "mapping": "OutletInfo.postcode",
+                            "config": {
+                                "fieldLabel": "รหัสไปรษณีย์",
+                                "name": "postcode"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "cols": [{
+                        "cls": "col-md-6",
+                        "type": "text",
+                        "mapping": "OutletInfo.mobile",
+                        "config": {
+                            "fieldLabel": "หมายเลขโทรศัพท์",
+                            "name": "mobile"
+                        }
+                    }, {
+                        "cls": "col-md-6",
+                        "type": "text",
+                        "mapping": "OutletInfo.email",
+                        "config": {
+                            "fieldLabel": "อีเมล (ร้านค้า)",
+                            "name": "email"
+                        }
+                    }]
+                },
+                {
+                    "cols": [{
+                        "type": "text",
+                        "mapping": "OutletInfo.f_name",
+                        "config": {
+                            "fieldLabel": "ชื่อผู้ติดต่อ",
+                            "name": "f_name"
+                        }
+                    }]
+                },
+                {
+                    "cols": [{
+                        "cls": "col-md-6",
+                        "type": "text",
+                        "mapping": "OutletInfo.book_bank_code",
+                        "config": {
+                            "fieldLabel": "เลขบัญชีธนาคาร",
+                            "name": "book_bank_code"
+                        }
+                    }, {
+                        "cls": "col-md-6",
+                        "type": "combobox",
+                        "data": {
+                            "api": {
+                                "url": "{{ECV_UAT}}/pos/utility/getBank?landid=1",
+                                "params": {
+                                    "wsp_id": "@wsp_id"
+                                },
+                                "mapping": "Data.GetBank"
+                            }
+                        },
+                        "config": {
+                            "fieldLabel": "ธนาคาร",
+                            "displayField": "value_name",
+                            "valueField": "value_id",
+                            "name": "bank_id"
+                        }
+                    }]
+                },
+                {
+                    "cols": [{
+                        "cls": "col-md-6",
+                        "type": "text",
+                        "mapping": "OutletInfo.book_bank_name",
+                        "config": {
+                            "fieldLabel": "ชื่อบัญชีธนาคาร",
+                            "name": "book_bank_name"
+                        }
+                    }]
+                },
+                {
+                    "cols": [{
+                        "type": "grid",
+                        "name": "gridLg",
+                        "data": {
+                            "api": {
+                                "url": "{{ECV_UAT}}/pos/outlet/getLgByOutlet?langid=1",
+                                "mapping": "Data.GetLgByOutlet[0].lg",
+                                "params": {
+                                    "outlet_id": "@params.outlet_id",
+                                    "wsp_id": "@wsp_id"
+                                },
+                                "authen": true
+                            }
+                        },
+                        "autoHeight": true,
+                        "tbar": [{
+                            "text": "เลือกวิธีการจัดส่ง",
+                            "action": {
+                                "type": "open",
+                                "dialog": {
+                                    "size": "md"
+                                },
+                                "id": "logistic_filter",
+                                "params": {
+                                    "wsp_id": "@wsp_id"
+                                }
+                            }
+                        }],
+                        "columns": [{
+                            "config": {
+                                "text": "การจัดส่ง",
+                                "dataIndex": "lg_doc_name",
+                                "flex": 1
+                            }
+                        }]
+                    }]
+                }
+            ]
+        }]
+    }]
+}

@@ -102,7 +102,8 @@ export class DataApi {
         }
 
         let resultData: any[] = [];
-        eval(`this.dataDB.collection('${bd.collection}').find(${bd.find})`)
+        let queryExpr: string = `this.dataDB.collection('${bd.collection}').find(${bd.find})`;
+        eval(queryExpr)
             .skip(start)
             .limit(limit)
             .toArray()

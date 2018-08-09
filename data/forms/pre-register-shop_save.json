@@ -1,0 +1,288 @@
+{
+    "title": "ลงทะเบียนร้านค้า",
+    "tbar": [
+    {
+        "text": "save",
+        "action":
+        {
+            "type": "save"
+        }
+    }],
+    "save":
+    {
+        "insert": [
+        {
+            "mongo":
+            {
+                "collection": "t_outlet_regis"
+            }
+        }],
+        "update": []
+    },
+    "data": [
+    {
+        "container": [
+        {
+            "rows": [
+            {
+                "cols": [
+                {
+                    "cls": "col-md-6",
+                    "type": "combobox",
+                    "data": [
+                    {
+                        "wsp_id": 1,
+                        "wsp_name": "e-commerce ชุมชน"
+                    },
+                    {
+                        "wsp_id": 2,
+                        "wsp_name": "ธนาคารออมสิน"
+                    },
+                    {
+                        "wsp_id": 3,
+                        "wsp_name": "กระทรวงพาญิชย์"
+                    }],
+                    "config":
+                    {
+                        "fieldLabel": "Workspace",
+                        "displayField": "wsp_name",
+                        "valueField": "wsp_id",
+                        "name": "wsp"
+                    }
+                },
+                {
+                    "cls": "col-md-6",
+                    "type": "combobox",
+                    "data":
+                    {
+                        "mongo":
+                        {
+                            "query": "('zz_user_type').find({}, { user_type: 1, user_type_name: 1 })"
+                        }
+                    },
+                    "config":
+                    {
+                        "fieldLabel": "ประเภทผู้ใช้งาน",
+                        "displayField": "user_type_name",
+                        "valueField": "user_type",
+                        "name": "user_type"
+                    }
+                }]
+            },
+            {
+                "cols": [
+                {
+                    "cls": "col-md-6",
+                    "type": "text",
+                    "config":
+                    {
+                        "fieldLabel": "ชื่อผู้ใช้งาน"
+                    }
+                },
+                {
+                    "cls": "col-md-6",
+                    "type": "text",
+                    "config":
+                    {
+                        "fieldLabel": "รหัสผู้ใช้งาน"
+                    }
+                }]
+            },
+            {
+                "cols": [
+                {
+                    "cls": "col-md-6",
+                    "type": "text",
+                    "config":
+                    {
+                        "fieldLabel": "เวลาเปิดร้าน"
+                    }
+                },
+                {
+                    "cls": "col-md-6",
+                    "type": "text",
+                    "config":
+                    {
+                        "fieldLabel": "เวลาปิดร้าน"
+                    }
+                }]
+            },
+            {
+                "cols": [
+                {
+                    "cls": "col-md-6",
+                    "type": "text",
+                    "config":
+                    {
+                        "fieldLabel": "เลขบัตรประชาชน"
+                    }
+                },
+                {
+                    "cls": "col-md-6",
+                    "type": "text",
+                    "config":
+                    {
+                        "fieldLabel": "เลขประจำตัวผู้เสียภาษี"
+                    }
+                }]
+            },
+            {
+                "cols": [
+                {
+                    "cls": "col-md-6",
+                    "type": "text",
+                    "config":
+                    {
+                        "fieldLabel": "อีเมล"
+                    }
+                }]
+            },
+            {
+                "cols": [
+                {
+                    "cls": "col-md-4",
+                    "type": "text",
+                    "config":
+                    {
+                        "fieldLabel": "บ้านเลขที่"
+                    }
+                },
+                {
+                    "cls": "col-md-4",
+                    "type": "text",
+                    "config":
+                    {
+                        "fieldLabel": "ห้อง"
+                    }
+                },
+                {
+                    "cls": "col-md-4",
+                    "type": "text",
+                    "config":
+                    {
+                        "fieldLabel": "ชั้น"
+                    }
+                }]
+            },
+            {
+                "cols": [
+                {
+                    "cls": "col-md-4",
+                    "type": "text",
+                    "config":
+                    {
+                        "fieldLabel": "อาคาร"
+                    }
+                },
+                {
+                    "cls": "col-md-4",
+                    "type": "text",
+                    "config":
+                    {
+                        "fieldLabel": "หมู่บ้าน"
+                    }
+                },
+                {
+                    "cls": "col-md-4",
+                    "type": "text",
+                    "config":
+                    {
+                        "fieldLabel": "หมู่ที่"
+                    }
+                }]
+            },
+            {
+                "cols": [
+                {
+                    "cls": "col-md-4",
+                    "type": "text",
+                    "config":
+                    {
+                        "fieldLabel": "ซอย"
+                    }
+                },
+                {
+                    "cls": "col-md-4",
+                    "type": "text",
+                    "config":
+                    {
+                        "fieldLabel": "ถนน"
+                    }
+                }]
+            },
+            {
+                "cols": [
+                {
+                    "cls": "col-md-4",
+                    "type": "combobox",
+                    "links": [
+                        "m_border"
+                    ],
+                    "data":
+                    {
+                        "mongo":
+                        {
+                            "query": "('z_province').find({\"inactive\" : { $ne: true }})"
+                        }
+                    },
+                    "config":
+                    {
+                        "fieldLabel": "จังหวัด",
+                        "displayField": "province_name",
+                        "valueField": "province_id",
+                        "name": "m_province"
+                    }
+                },
+                {
+                    "cls": "col-md-4",
+                    "type": "combobox",
+                    "links": [
+                        "m_district"
+                    ],
+                    "autoLoad": false,
+                    "data":
+                    {
+                        "mongo":
+                        {
+                            "query": "('z_border').find({\"inactive\" : { $ne: true }, \"province_id\": {{province_id}} })",
+                            "params":
+                            {
+                                "province_id": "@m_province"
+                            }
+                        }
+                    },
+                    "config":
+                    {
+                        "fieldLabel": "อำเภอ",
+                        "displayField": "border_name",
+                        "valueField": "border_id",
+                        "name": "m_border"
+                    }
+                },
+                {
+                    "cls": "col-md-4",
+                    "type": "combobox",
+                    "autoLoad": false,
+                    "data":
+                    {
+                        "mongo":
+                        {
+                            "query": "('z_district').find({\"inactive\" : { $ne: true }, \"border_id\": {{border_id}}})",
+                            "params":
+                            {
+                                "border_id": "@m_border"
+                            }
+                        }
+                    },
+                    "config":
+                    {
+                        "fieldLabel": "ตำบล",
+                        "displayField": "district_name",
+                        "valueField": "district_id",
+                        "name": "m_district"
+                    }
+                }]
+            }]
+        }]
+    }]
+}

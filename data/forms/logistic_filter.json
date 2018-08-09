@@ -1,0 +1,61 @@
+{
+    "title": "เลือกวิธีการจัดส่ง",
+    "tbar": [{
+        "text": "select",
+        "action": {
+            "type": "select",
+            "src": "gridLg",
+            "mapping": {
+                "lg_doc_id": "@doc_id",
+                "lg_doc_name": "@ct_name",
+                "lg_doc_type": "@doc_type"
+            }
+        }
+    }],
+    "data": [{
+        "container": [{
+            "rows": [{
+                "cols": [{
+                    "type": "grid",
+                    "name": "gridLg",
+                    "selModel": true,
+                    "autoHeight": true,
+                    "data": {
+                        "api": {
+                            "url": "{{ECV_UAT}}/pos/utility/getLogistics?langid=1",
+                            "params": {
+                                "wsp_id": "@params.wsp_id"
+                            },
+                            "method": "GET",
+                            "mapping": "Data.Logistics",
+                            "filter": [
+                                "outlet_name",
+                                "wsp_id",
+                                "user_type",
+                                "province_id",
+                                "border_id",
+                                "district_id"
+                            ]
+                        }
+                    },
+                    "columns": [{
+                            "config": {
+                                "cls": "col-xxx",
+                                "text": "รหัส",
+                                "dataIndex": "doc_type",
+                                "width": 100
+                            }
+                        },
+                        {
+                            "config": {
+                                "text": "ผู้ให้บริการ",
+                                "dataIndex": "ct_name",
+                                "flex": 1
+                            }
+                        }
+                    ]
+                }]
+            }]
+        }]
+    }]
+}

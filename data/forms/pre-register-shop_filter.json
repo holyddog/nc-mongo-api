@@ -1,0 +1,146 @@
+{
+    "title": "ข้อมูลร้านค้าที่ลงทะเบียน",
+    "tbar": [{
+        "icon": "fa-plus",
+        "text": "นำเข้าข้อูลด้วย excel",
+        "cls": "ext-grey",
+        "action": {
+            "type": "link",
+            "path": "/form/pre-register-shop_excel"
+        }
+    }],
+    "data": [{
+            "container": [{
+                "fieldset": {
+                    "title": "ค้นหา",
+                    "rows": [{
+                            "cols": [{
+                                "cls": "col-md-6",
+                                "type": "combobox",
+                                "data": {
+                                    "mongo": {
+                                        "query": "('zz_workspace').find({}, { wsp_id: 1, wsp_name: 1 })"
+                                    }
+                                },
+                                "config": {
+                                    "fieldLabel": "Workspace",
+                                    "displayField": "wsp_name",
+                                    "valueField": "wsp_id",
+                                    "name": "wsp_id"
+                                }
+                            }, {
+                                "cls": "col-md-6",
+                                "type": "text",
+                                "query": "{ $regex: \"^.*{{value}}.*$\", $options: \"i\" }",
+                                "config": {
+                                    "fieldLabel": "ชื่อร้านค้า",
+                                    "name": "outlet_name"
+                                }
+                            }]
+                        }, {
+                            "cols": [{
+                                "cls": "col-md-6",
+                                "type": "combobox",
+                                "data": {
+                                    "mongo": {
+                                        "query": "('z_province').find({}, { province_id: 1, province_name: 1 })"
+                                    }
+                                },
+                                "config": {
+                                    "editable": true,
+                                    "fieldLabel": "จังหวัด",
+                                    "displayField": "province_name",
+                                    "valueField": "province_id",
+                                    "name": "province_id"
+                                }
+                            }, {
+                                "cls": "col-md-6",
+                                "type": "combobox",
+                                "data": [{
+                                        "status_id": 0,
+                                        "status_name": "รออนุมัติ"
+                                    },
+                                    {
+                                        "status_id": 1,
+                                        "status_name": "อนุมัติแล้ว"
+                                    }
+                                ],
+                                "config": {
+                                    "fieldLabel": "สถานะ",
+                                    "displayField": "status_name",
+                                    "valueField": "status_id",
+                                    "name": "activated"
+                                }
+                            }]
+                        },
+                        {
+                            "cols": [{
+                                "type": "button",
+                                "export": true,
+                                "filter": "gridShops"
+                            }]
+                        }
+                    ]
+                }
+            }]
+        },
+        {
+            "container": [{
+                "rows": [{
+                    "cols": [{
+                        "type": "grid",
+                        "name": "gridShops",
+                        "paging": {
+                            "mongo": {
+                                "collection": "t_outlet_regis",
+                                "filter": [
+                                    "outlet_name",
+                                    "wsp_id",
+                                    "province_id",
+                                    "activated"
+                                ]
+                            }
+                        },
+                        "columns": [{
+                                "config": {
+                                    "text": "ชื่อร้านค้า",
+                                    "dataIndex": "outlet_name",
+                                    "flex": 1
+                                }
+                            },
+                            {
+                                "config": {
+                                    "text": "คำอธิบาย",
+                                    "dataIndex": "outlet_name",
+                                    "flex": 1
+                                }
+                            },
+                            {
+                                "config": {
+                                    "text": "รหัสยืนยัน",
+                                    "dataIndex": "regis_key",
+                                    "width": 150
+                                }
+                            },
+                            {
+                                "config": {
+                                    "text": "ชื่อจังหวัด",
+                                    "dataIndex": "province_name",
+                                    "width": 180
+                                }
+                            },
+                            {
+                                "config": {
+                                    "text": "สถานะ",
+                                    "dataIndex": "activated",
+                                    "width": 150,
+                                    "renderer": "function(value) { return (value == 0)? 'รออนุมัติ': 'อนุมัติแล้ว'; }"
+                                }
+                            }
+                        ]
+                    }]
+                }]
+            }]
+        }
+    ]
+}

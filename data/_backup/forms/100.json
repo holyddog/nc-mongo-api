@@ -7,7 +7,7 @@
             "en": "Add Product"
         },
         "action": {
-            "type": "openForm",
+            "type": "open",
             "id": 101
         }
     }],
@@ -26,7 +26,15 @@
                                     "cls": "flex",
                                     "items": [{
                                             "dataIndex": "item_name",
-                                            "cls": "m-text"
+                                            "cls": "m-text",
+                                            "action": {
+                                                "type": "open",
+                                                "id": 101,
+                                                "params": {
+                                                    "item_id": "@item_id",
+                                                    "id": 31
+                                                }
+                                            }
                                         },
                                         {
                                             "cls": "d-flex",
@@ -87,10 +95,11 @@
                             },
                             {
                                 "action": {
-                                    "type": "openForm",
+                                    "type": "open",
                                     "id": 101,
                                     "params": {
-                                        "item_id": "@item_id"
+                                        "item_id": "@item_id",
+                                        "id": 31
                                     }
                                 },
                                 "config": {

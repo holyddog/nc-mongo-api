@@ -1,0 +1,90 @@
+{
+    "title": "เพิ่มผู้ผลิต",
+    "tbar": [{
+        "text": "save",
+        "action": {
+            "type": "save"
+        }
+    }],
+    "save": {
+        "insert": [{
+            "mongo": {
+                "collection": "t_outlet_regis"
+            }
+        }],
+        "update": []
+    },
+    "data": [{
+        "container": [{
+            "rows": [{
+                "cols": [{
+                    "cls": "col-md-6",
+                    "type": "file",
+                    "ref": "gridSup",
+                    "excel": {
+                        "rowIndex": 0,
+                        "columns": [{
+                            "text": "OUTLET_NAME",
+                            "name": "OutletName"
+                        }, {
+                            "text": "DESCRIPTION",
+                            "name": "Description"
+                        }, {
+                            "text": "PROVINCE",
+                            "name": "Province"
+                        }]
+                    },
+                    "config": {
+                        "fieldLabel": "นำเข้าข้อมูล (.xlsx)"
+                    }
+                }, {
+                    "cls": "col-md-6",
+                    "type": "combobox",
+                    "data": [{
+                        "wsp_id": 1,
+                        "wsp_name": "e-commerce ชุมชน"
+                    }, {
+                        "wsp_id": 2,
+                        "wsp_name": "ธนาคารออมสิน"
+                    }, {
+                        "wsp_id": 3,
+                        "wsp_name": "กระทรวงพาญิชย์"
+                    }],
+                    "config": {
+                        "fieldLabel": "Workspace",
+                        "displayField": "wsp_name",
+                        "valueField": "wsp_id",
+                        "name": "wsp"
+                    }
+                }]
+            }, {
+                "cols": [{
+                    "name": "gridSup",
+                    "type": "grid",
+                    "columns": [{
+                            "config": {
+                                "text": "ชื่อผู้ผลิต",
+                                "dataIndex": "OutletName",
+                                "flex": 1
+                            }
+                        },
+                        {
+                            "config": {
+                                "text": "คำอธิบาย",
+                                "dataIndex": "Description",
+                                "flex": 1
+                            }
+                        },
+                        {
+                            "config": {
+                                "text": "ชื่อจังหวัด",
+                                "dataIndex": "Province",
+                                "width": 200
+                            }
+                        }
+                    ]
+                }]
+            }]
+        }]
+    }]
+}

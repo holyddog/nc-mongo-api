@@ -1,70 +1,33 @@
 [{
         "link": "/dashboard",
-        "name": "Dashboard",
+        "name": "ภาพรวมข้อมูล",
         "icon": "fa-tachometer-alt",
         "roles": [
             "admin"
         ]
     },
     {
-        "link": "/form/200",
-        "name": "Page",
-        "icon": "fa-tachometer-alt",
-        "roles": [
-            "admin"
-        ]
-    },
-    {
-        "link": "/form/100",
-        "name": "สินค้าออนไลน์",
+        "link": "/form/pre-register-shop_filter",
+        "name": "Pre-register ร้านค้า",
         "icon": "fa-shopping-cart",
         "roles": [
             "admin"
         ]
     },
     {
-        "link": "/form/100001",
-        "name": "Form 1",
-        "icon": "fa-inbox",
+        "link": "/form/manage-order_filter",
+        "name": "บริหารจัดการคำสั่งซื้อ",
+        "icon": "fa-receipt",
         "roles": [
             "admin"
         ]
     },
     {
-        "name": "form_group",
-        "icon": "fa-chart-bar",
+        "link": "/form/manage-outlet_filter",
+        "name": "บริหารจัดการร้านค้า",
+        "icon": "fa-user",
         "roles": [
             "admin"
-        ],
-        "link": "/group",
-        "children": [{
-                "link": "/form/100002",
-                "name": "form_2",
-                "roles": [
-                    "admin"
-                ]
-            },
-            {
-                "link": "/form/100003",
-                "name": "form_3",
-                "roles": [
-                    "admin"
-                ]
-            },
-            {
-                "link": "/form/100004",
-                "name": "form_4",
-                "roles": [
-                    "admin"
-                ]
-            },
-            {
-                "link": "/form/100008",
-                "name": "Mongo Items",
-                "roles": [
-                    "admin"
-                ]
-            }
         ]
     }
 ]

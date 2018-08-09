@@ -40,6 +40,15 @@
                     "pics": "@pics"
                 }
             }
+        }, {
+            "mongo": {
+                "collection": "items",
+                "pk": "id",
+                "params": {
+                    "name": "@name",
+                    "cdate": "@cdate"
+                }
+            }
         }],
         "update": []
     },
@@ -67,7 +76,7 @@
         {
             "name": "Province",
             "mongo": {
-                "query": "('provinces').find({\"PROVINCE_ID\" : {{id}} })",
+                "query": "('provinces').find({\"id\" : {{id}} })",
                 "single": true,
                 "params": {
                     "id": 111
@@ -100,10 +109,19 @@
                 },
                 {
                     "cols": [{
+                        "cls": "col-md-6",
                         "type": "text",
-                        "mapping": "Province.PROVINCE_NAME",
+                        "mapping": "Province.name.th",
                         "config": {
                             "fieldLabel": "จังหวัด"
+                        }
+                    }, {
+                        "cls": "col-md-6",
+                        "type": "date",
+                        "mapping": "ItemData.cdate",
+                        "config": {
+                            "fieldLabel": "วันที่",
+                            "name": "cdate"
                         }
                     }]
                 },
@@ -228,8 +246,8 @@
                             },
                             "columns": [{
                                     "config": {
-                                        "dataIndex": "it_spec_name",
-                                        "hidden": true
+                                        "hidden": true,
+                                        "dataIndex": "it_spec_name"
                                     }
                                 },
                                 {

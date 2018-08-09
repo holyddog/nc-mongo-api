@@ -2,24 +2,33 @@
     "title": "Page 1",
     "tbar": [{
         "icon": "fa-plus",
-        "text": "Open Form",
+        "text": "Open",
         "action": {
-            "type": "openForm",
+            "type": "open",
             "id": 201
         }
     }, {
         "icon": "fa-plus",
-        "text": "Open Dialog 1",
+        "text": "Dialog 1",
         "action": {
-            "type": "openDialog",
+            "type": "open",
+            "dialog": true,
             "id": 100003
         }
     }, {
         "icon": "fa-plus",
-        "text": "Open Dialog 2",
+        "text": "Dialog 2",
         "action": {
-            "type": "openDialog",
+            "type": "open",
+            "dialog": true,
             "id": 201
+        }
+    }, {
+        "icon": "fa-plus",
+        "text": "Navigate",
+        "action": {
+            "type": "link",
+            "path": "/form/201"
         }
     }],
     "data": [{

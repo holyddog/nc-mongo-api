@@ -40,7 +40,7 @@ export class FormApi {
         let saveData: any = {};
         let nullData: any = {};
         let hasNull: boolean = false;
-        for (let i of bd.data) {            
+        for (let i of bd.data) {
             if (i.type == 'date') {
                 if (i.sysDate) {
                     i.value = new Date();
@@ -66,8 +66,8 @@ export class FormApi {
             update = { $set: saveData, $unset: nullData };
         }
         this.dataDB.collection(bd.collection).update(bd.filter, update)
-            .then(() => res.json({ 
-                success: true 
+            .then(() => res.json({
+                success: true
             }))
             .catch(err => {
                 res.json(new ErrorModel(
@@ -78,39 +78,57 @@ export class FormApi {
 
     insertFormData(req, res) {
         let bd: any = req.body;
+        let now: any = new Date();
 
-        let saveData: any = {};
-        api.getNextSeq(this.dataDB, bd.collection)
-            .then(id => {
-                saveData[bd.pk] = id;
-                for (let i of bd.data) {
-                    if (i.type == 'date') {
-                        if (i.sysDate) {
-                            i.value = new Date();
-                        }
-                        else if (i.value != null) {
-                            i.value = new Date(i.value);
+        if (!(bd.data instanceof Array)) {
+            let saveData: any = {};
+            api.getNextSeq(this.dataDB, bd.collection)
+                .then(id => {
+                    saveData[bd.pk] = id;
+
+                    for (let i in bd.data) {
+                        var d = bd.data[i];
+                        if (typeof d == 'object' && d.type == 'date') {
+                            bd.data[i] = new Date(d.value);
                         }
                     }
-
-                    if (i.value != null) {
-                        if (i.type == 'currency') {
-                            i.value = mongodb.Decimal128.fromString(i.value.toString());
+                    return this.dataDB.collection(bd.collection).insert(Object.assign(saveData, bd.data));
+                })
+                .then(() => res.json({
+                    success: true,
+                    id: saveData[bd.pk]
+                }))
+                .catch(err => {
+                    res.json(new ErrorModel(
+                        `Internal service error.`
+                    ));
+                });
+        }
+        else {
+            for (let data of bd.data) {
+                for (let i in data) {
+                    var d = data[i];
+                    if (d) {
+                        if (typeof d == 'object' && d.type == 'date') {
+                            data[i] = new Date(d.value);
                         }
-                        saveData[i.field] = i.value;
+                        else if (d == '@DATE') {
+                            data[i] = now;
+                        }
                     }
                 }
-                return this.dataDB.collection(bd.collection).insert(saveData);
-            })
-            .then(() => res.json({ 
-                success: true,
-                id: saveData[bd.pk]
-            }))
-            .catch(err => {
-                res.json(new ErrorModel(
-                    `Internal service error.`
-                ));
-            });
+            }
+
+            this.dataDB.collection(bd.collection).insertMany(bd.data)
+                .then(() => res.json({
+                    success: true
+                }))
+                .catch(err => {
+                    res.json(new ErrorModel(
+                        `Internal service error.`
+                    ));
+                });
+        }
     }
 
     _getUrl(url: string) {
@@ -123,7 +141,7 @@ export class FormApi {
     }
 
     findMenu(req, res) {
-        fs.readFile('data/menu.json', 'utf8', (err, data) => {
+        fs.readFile(Config.DataDir + '/menu.json', 'utf8', (err, data) => {
             if (!err) {
                 res.json(JSON.parse(data));
             }
@@ -144,7 +162,10 @@ export class FormApi {
                 if (r.cols) {
                     for (let c of r.cols) {
                         if (c.imagePath) {
-                            c.imagePath = c.imagePath.replace('{{IMAGE_PATH}}', Config.ImagePath);
+                            var url = c.imagePath;
+                            let serviceName: string = url.substring(url.indexOf('{{') + 2, url.lastIndexOf('}}'));
+                            let serviceUrl: string = Config.API[serviceName];
+                            c.imagePath = url.replace('{{' + serviceName + '}}', serviceUrl);
                         }
                         if (c.api && c.api.url) {
                             c.api.url = this._getUrl(c.api.url);
@@ -188,6 +209,11 @@ export class FormApi {
                                 c.data.api.url = this._getUrl(c.data.api.url);
                             }
                         }
+                        else if (c.paging) {                            
+                            if (c.paging.api && c.paging.api.url) {
+                                c.paging.api.url = this._getUrl(c.paging.api.url);
+                            }
+                        }
                         else {
                             c.id = index++;
                         }
@@ -196,7 +222,7 @@ export class FormApi {
             }
         };
 
-        var prepareData = (data: any): Promise<any> => {           
+        var prepareData = (data: any): Promise<any> => {
             if (data.ds && data.ds.length > 0) {
                 for (let i of data.ds) {
                     if (i.api && i.api.url) {
@@ -255,11 +281,15 @@ export class FormApi {
             });
         }
 
-        fs.readFile('data/forms/' + req.params.id + '.json', 'utf8', (err, data) => {
+        fs.readFile(Config.DataDir + '/forms/' + req.params.id + '.json', 'utf8', (err, data) => {
             if (!err) {
                 prepareData(JSON.parse(data))
                     .then(resultData => {
-                        res.json(resultData);
+                        fs.exists(Config.DataDir + '/scripts/' + req.params.id + '.js', (exists: boolean) => {
+                            resultData.script = exists;
+                            res.json(resultData);
+                        });
+
                     })
                     .catch(err => {
                         res.json(err);
