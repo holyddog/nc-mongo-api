@@ -1,0 +1,35 @@
+{
+    "data": [{
+        "paper": false,
+        "container": [{
+            "rows": [{
+                    "cols": [{
+                        "type": "text",
+                        "config": {
+                            "fieldLabel": "ชื่อผู้ใช้งาน",
+                            "name": "username"
+                        }
+                    }]
+                }, {
+                    "cols": [{
+                        "type": "password",
+                        "config": {
+                            "fieldLabel": "รหัสผ่าน",
+                            "name": "password"
+                        }
+                    }]
+                },
+                {
+                    "cols": [{
+                        "cls": "text-center pt-3",
+                        "type": "button",
+                        "config": {
+                            "name": "btnLogin",
+                            "text": "เข้าสู่ระบบ"
+                        }
+                    }]
+                }
+            ]
+        }]
+    }]
+}

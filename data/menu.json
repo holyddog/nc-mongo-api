@@ -1,12 +1,4 @@
 [{
-        "link": "/dashboard",
-        "name": "ภาพรวมข้อมูล",
-        "icon": "fa-tachometer-alt",
-        "roles": [
-            "admin"
-        ]
-    },
-    {
         "link": "/form/pre-register-shop_filter",
         "name": "Pre-register ร้านค้า",
         "icon": "fa-shopping-cart",
@@ -16,7 +8,7 @@
     },
     {
         "link": "/form/manage-order_filter",
-        "name": "บริหารจัดการคำสั่งซื้อ",
+        "name": "จัดการคำสั่งซื้อ",
         "icon": "fa-receipt",
         "roles": [
             "admin"
@@ -24,8 +16,16 @@
     },
     {
         "link": "/form/manage-outlet_filter",
-        "name": "บริหารจัดการร้านค้า",
+        "name": "จัดการร้านค้า",
         "icon": "fa-user",
+        "roles": [
+            "admin"
+        ]
+    },
+    {
+        "link": "/form/manage-item_filter",
+        "name": "จัดการสินค้า",
+        "icon": "fa-box-open",
         "roles": [
             "admin"
         ]

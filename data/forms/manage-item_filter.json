@@ -1,0 +1,180 @@
+{
+    "title": "บริหารจัดการสินค้า",
+    "tbar": [],
+    "data": [{
+            "container": [{
+                "fieldset": {
+                    "title": "ค้นหา",
+                    "rows": [{
+                            "cols": [{
+                                "cls": "col-md-6",
+                                "type": "combobox",
+                                "data": {
+                                    "mongo": {
+                                        "query": "('zz_workspace').find({}, { wsp_id: 1, wsp_name: 1 })"
+                                    }
+                                },
+                                "config": {
+                                    "fieldLabel": "Workspace",
+                                    "displayField": "wsp_name",
+                                    "valueField": "wsp_id",
+                                    "name": "wsp_id"
+                                }
+                            }, {
+                                "cls": "col-md-6",
+                                "type": "text",
+                                "mapping": "items.barcode",
+                                "config": {
+                                    "fieldLabel": "บาร์โค้ด",
+                                    "name": "barcode"
+                                }
+                            }]
+                        }, {
+                            "cols": [{
+                                "cls": "col-md-6",
+                                "type": "text",
+                                "query": "{ $regex: \"^.*{{value}}.*$\", $options: \"i\" }",
+                                "config": {
+                                    "fieldLabel": "ชื่อร้านค้า",
+                                    "name": "outlet_name"
+                                }
+                            }, {
+                                "cls": "col-md-6",
+                                "type": "text",
+                                "mapping": "items.item_name",
+                                "query": "{ $regex: \"^.*{{value}}.*$\", $options: \"i\" }",
+                                "config": {
+                                    "fieldLabel": "ชื่อสินค้า",
+                                    "name": "item_name"
+                                }
+                            }]
+                        },
+                        {
+                            "cols": [{
+                                "type": "button",
+                                "export": true,
+                                "filter": "gridItems"
+                            }]
+                        }
+                    ]
+                }
+            }]
+        },
+        {
+            "container": [{
+                "rows": [{
+                    "cols": [{
+                        "type": "grid",
+                        "selModel": true,
+                        "name": "gridItems",
+                        "paging": {
+                            "mongo": {
+                                "collection": "t_ct_qo",
+                                "filter": [
+                                    "barcode",
+                                    "outlet_name",
+                                    "item_name",
+                                    "wsp_id"
+                                ]
+                            }
+                        },
+                        "features": [{
+                            "type": "rowbody",
+                            "tpl": [
+                                "<tpl if='qo_sale_chanels.length &gt; 0'>",
+                                "<div style='overflow: hidden; margin-left: 24px; border-left: solid 1px #cfcfcf; border-top: solid 1px #cfcfcf; padding: 0 10px;'>",
+                                "   <div style='padding: 5px 0'>ช่องทางการขาย</div>",
+                                "   <tpl for='qo_sale_chanels'>",
+                                "       <tpl if='sc_doc_type == 100120'>",
+                                "           <table style='width: 100%; margin: 0 0 10px 0' border='1' bordercolor='#cfcfcf'>",
+                                "               <tr>",
+                                "                   <th class='text-center' style='font-weight: 300; padding: 5px 10px' colspan='3'>{sc_name}</th>",
+                                "               </tr>",
+                                "               <tr>",
+                                "                   <th style='font-weight: 300; padding: 5px 10px'>เริ่มต้น</th>",
+                                "                   <th style='font-weight: 300; padding: 5px 10px'>สิ้นสุด</th>",
+                                "                   <th style='font-weight: 300; padding: 5px 10px'>ราคาส่ง</th>",
+                                "               </tr>",
+                                "               <tpl for='price_list'>",
+                                "                   <tr>",
+                                "                       <td style='font-weight: 300; padding: 5px 10px'>{s_qty}</td>",
+                                "                       <td style='font-weight: 300; padding: 5px 10px'>{e_qty}</td>",
+                                "                       <td style='font-weight: 300; padding: 5px 10px'>{price}</td>",
+                                "                   </tr>",
+                                "               </tpl>",
+                                "           </table>",
+                                "       </tpl>",
+                                "       <tpl if='sc_doc_type == 100121'>",
+                                "           <table style='width: 100%; margin: 0 0 10px 0' border='1' bordercolor='#cfcfcf'>",
+                                "               <tr>",
+                                "                   <th class='text-center' style='font-weight: 300; padding: 5px 10px' colspan='4'>{sc_name}</th>",
+                                "               </tr>",
+                                "               <tr>",
+                                "                   <th style='font-weight: 300; padding: 5px 10px'>จำนวน</th>",
+                                "                   <th style='font-weight: 300; padding: 5px 10px'>ราคาขาย</th>",
+                                "                   <th style='font-weight: 300; padding: 5px 10px'>ราคาส่ง</th>",
+                                "                   <th style='font-weight: 300; padding: 5px 10px'>กำไรต่อชิ้น</th>",
+                                "               </tr>",
+                                "               <tpl for='price_list'>",
+                                "                   <tr>",
+                                "                       <td style='font-weight: 300; padding: 5px 10px'>{s_qty}</td>",
+                                "                       <td style='font-weight: 300; padding: 5px 10px'>{[(values.cost)? values.cost: 0]}</td>",
+                                "                       <td style='font-weight: 300; padding: 5px 10px'>{price}</td>",
+                                "                       <td style='font-weight: 300; padding: 5px 10px'>{[values.price - ((values.cost)? values.cost: 0)]}</td>",
+                                "                   </tr>",
+                                "               </tpl>",
+                                "           </table>",
+                                "       </tpl>",
+                                "   </tpl>",
+                                "</div>",
+                                "</tpl>"
+                            ]
+                        }],
+                        "columns": [{
+                                "mapping": "items.barcode",
+                                "config": {
+                                    "text": "บาร์โค้ด",
+                                    "dataIndex": "items",
+                                    "width": 150
+                                }
+                            },
+                            {
+                                "action": {
+                                    "type": "open",
+                                    "dialog": true,
+                                    "id": "manage-item_view",
+                                    "params": {
+                                        "item_id": "@items.item_id",
+                                        "view": 1
+                                    }
+                                },
+                                "mapping": "items.item_name",
+                                "config": {
+                                    "text": "ชื่อสินค้า",
+                                    "dataIndex": "items",
+                                    "flex": 2
+                                }
+                            },
+                            {
+                                "mapping": "outlet_name",
+                                "config": {
+                                    "text": "ชื่อร้านค้า",
+                                    "dataIndex": "outlet_name",
+                                    "flex": 1
+                                }
+                            },
+                            {
+                                "mapping": "items.sale_price",
+                                "config": {
+                                    "text": "ราคาขาย",
+                                    "dataIndex": "items",
+                                    "width": 150
+                                }
+                            }
+                        ]
+                    }]
+                }]
+            }]
+        }
+    ]
+}

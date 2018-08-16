@@ -1,0 +1,242 @@
+{
+    "title": "เรียกดูข้อมูลสินค้า",
+    "pk": [
+        "item_id"
+    ],
+    "tbar": [{
+        "text": "approve",
+        "icon": "fa-check",
+        "name": "tbarApprove",
+        "action": {
+            "type": "custom"
+        }
+    }],
+    "ds": [{
+        "name": "ItemData",
+        "mongo": {
+            "query": "('t_ct_qo').find({ 'items.item_id': {{id}} })",
+            "single": true,
+            "params": {
+                "id": "@params.item_id"
+            }
+        }
+    }],
+    "save": {
+        "insert": [],
+        "update": []
+    },
+    "data": [{
+        "container": [{
+            "rows": [{
+                    "cols": [{
+                        "cls": "col-md-6 offset-md-6",
+                        "type": "combobox",
+                        "mapping": "ItemData.wsp_id",
+                        "data": {
+                            "mongo": {
+                                "query": "('zz_workspace').find({}, { wsp_id: 1, wsp_name: 1 })"
+                            }
+                        },
+                        "config": {
+                            "fieldLabel": "Workspace",
+                            "displayField": "wsp_name",
+                            "valueField": "wsp_id",
+                            "name": "wsp_id"
+                        }
+                    }]
+                },
+                {
+                    "cols": [{
+                        "cls": "col-md-6",
+                        "type": "file",
+                        "mapping": "ItemData.items.item_pic_path.content_path",
+                        "imagePath": "{{IMAGE_PATH}}",
+                        "config": {
+                            "name": "content_path"
+                        }
+                    }, {
+                        "cls": "col-md-6",
+                        "type": "text",
+                        "mapping": "ItemData.items.item_pic_path.content_id",
+                        "config": {
+                            "hidden": true,
+                            "name": "content_id"
+                        }
+                    }]
+                },
+                {
+                    "cols": [{
+                            "cls": "col-md-6",
+                            "type": "text",
+                            "mapping": "ItemData.doc_no",
+                            "config": {
+                                "fieldLabel": "รหัสสินค้า",
+                                "name": "doc_no"
+                            }
+                        },
+                        {
+                            "cls": "col-md-6",
+                            "type": "text",
+                            "mapping": "ItemData.items.barcode",
+                            "config": {
+                                "fieldLabel": "บาร์โค้ด",
+                                "name": "barcode"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "cols": [{
+                        "cls": "col-md-12",
+                        "type": "text",
+                        "mapping": "ItemData.items.item_name",
+                        "config": {
+                            "fieldLabel": "ชื่อสินค้า",
+                            "name": "item_name"
+                        }
+                    }]
+                },
+                {
+                    "cols": [{
+                        "cls": "col-md-12",
+                        "type": "textarea",
+                        "mapping": "ItemData.items.item_desc",
+                        "config": {
+                            "fieldLabel": "รายละเอียดสินค้า",
+                            "name": "item_desc"
+                        }
+                    }]
+                },
+                {
+                    "cols": [{
+                            "cls": "col-md-6",
+                            "type": "combobox",
+                            "mapping": "ItemData.items.ic_id",
+                            "links": [
+                                "ig_id"
+                            ],
+                            "data": {
+                                "mongo": {
+                                    "query": "('z_it_category').find({ inactive: { $ne: true } }, { ic_id: 1, ic_name: 1 })"
+                                }
+                            },
+                            "config": {
+                                "fieldLabel": "หมวดหมู่สินค้า",
+                                "displayField": "ic_name",
+                                "valueField": "ic_id",
+                                "name": "ic_id"
+                            }
+                        },
+                        {
+                            "cls": "col-md-6",
+                            "type": "combobox",
+                            "mapping": "ItemData.items.ig_id",
+                            "links": [
+                                "isg_id"
+                            ],
+                            "autoLoad": false,
+                            "data": {
+                                "mongo": {
+                                    "query": "('z_it_group').find({ inactive: { $ne: true }, ic_id: {{ic_id}} })",
+                                    "params": {
+                                        "ic_id": "@ic_id"
+                                    }
+                                }
+                            },
+                            "config": {
+                                "fieldLabel": "กลุ่มสินค้า",
+                                "displayField": "ig_name",
+                                "valueField": "ig_id",
+                                "name": "ig_id"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "cols": [{
+                        "cls": "col-md-6",
+                        "type": "combobox",
+                        "mapping": "ItemData.items.isg_id",
+                        "autoLoad": false,
+                        "data": {
+                            "mongo": {
+                                "query": "('z_it_sub_group').find({ inactive: { $ne: true }, ig_id: {{ig_id}} })",
+                                "params": {
+                                    "ig_id": "@ig_id"
+                                }
+                            }
+                        },
+                        "config": {
+                            "fieldLabel": "กลุ่มย่อยสินค้า",
+                            "displayField": "isg_name",
+                            "valueField": "isg_id",
+                            "name": "isg_id"
+                        }
+                    }]
+                }
+            ]
+        }, {
+            "fieldset": {
+                "title": "ช่องทางการขาย",
+                "rows": [{
+                    "cols": [{
+                        "type": "grid",
+                        "autoHeight": true,
+                        "config": {
+                            "hideHeaders": true
+                        },
+                        "mapping": "ItemData.qo_sale_chanels",
+                        "features": [{
+                            "type": "rowbody",
+                            "tpl": [
+                                "<div style='padding: 0 10px'>",
+                                "       <tpl if='sc_doc_type == 100120'>",
+                                "           <table style='width: 100%; margin: 5px 0 10px 0' border='1' bordercolor='#cfcfcf'>",
+                                "               <tr>",
+                                "                   <th style='font-weight: 300; padding: 5px 10px'>เริ่มต้น</th>",
+                                "                   <th style='font-weight: 300; padding: 5px 10px'>สิ้นสุด</th>",
+                                "                   <th style='font-weight: 300; padding: 5px 10px'>ราคาส่ง</th>",
+                                "               </tr>",
+                                "               <tpl for='price_list'>",
+                                "                   <tr>",
+                                "                       <td style='font-weight: 300; padding: 5px 10px'>{s_qty}</td>",
+                                "                       <td style='font-weight: 300; padding: 5px 10px'>{e_qty}</td>",
+                                "                       <td style='font-weight: 300; padding: 5px 10px'>{price}</td>",
+                                "                   </tr>",
+                                "               </tpl>",
+                                "           </table>",
+                                "       </tpl>",
+                                "       <tpl if='sc_doc_type == 100121'>",
+                                "           <table style='width: 100%; margin: 5px 0 10px 0' border='1' bordercolor='#cfcfcf'>",
+                                "               <tr>",
+                                "                   <th style='font-weight: 300; padding: 5px 10px'>จำนวน</th>",
+                                "                   <th style='font-weight: 300; padding: 5px 10px'>ราคาขาย</th>",
+                                "                   <th style='font-weight: 300; padding: 5px 10px'>ราคาส่ง</th>",
+                                "                   <th style='font-weight: 300; padding: 5px 10px'>กำไรต่อชิ้น</th>",
+                                "               </tr>",
+                                "               <tpl for='price_list'>",
+                                "                   <tr>",
+                                "                       <td style='font-weight: 300; padding: 5px 10px'>{s_qty}</td>",
+                                "                       <td style='font-weight: 300; padding: 5px 10px'>{[(values.cost)? values.cost: 0]}</td>",
+                                "                       <td style='font-weight: 300; padding: 5px 10px'>{price}</td>",
+                                "                       <td style='font-weight: 300; padding: 5px 10px'>{[values.price - ((values.cost)? values.cost: 0)]}</td>",
+                                "                   </tr>",
+                                "               </tpl>",
+                                "           </table>",
+                                "       </tpl>",
+                                "</div>"
+                            ]
+                        }],
+                        "columns": [{
+                            "config": {
+                                "text": "ช่องทางการขาย",
+                                "dataIndex": "sc_name",
+                                "flex": 1
+                            }
+                        }]
+                    }]
+                }]
+            }
+        }]
+    }]
+}

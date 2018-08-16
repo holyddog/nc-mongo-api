@@ -145,6 +145,160 @@
                     ]
                 }]
             }]
+        }, {
+            "fieldset": {
+                "title": "สรุปสถานะ",
+                "rows": [{
+                    "cols": [{
+                        "cls": "col-md-6",
+                        "type": "combobox",
+                        "mapping": "OrderData.status_entity.value_id",
+                        "data": {
+                            "mongo": {
+                                "query": "('zz_e_order_status').find({}, { e_order_status_id: 1, e_order_status_name: 1 })"
+                            }
+                        },
+                        "editable": {
+                            "view": 1
+                        },
+                        "config": {
+                            "fieldLabel": "สถานะล่าสุด",
+                            "displayField": "e_order_status_name",
+                            "valueField": "e_order_status_id",
+                            "name": "e_order_status_id"
+                        }
+                    }]
+                }, {
+                    "cols": [{
+                        "cls": "col-md-6",
+                        "type": "button",
+                        "config": {
+                            "fieldLabel": "",
+                            "text": "เปลี่ยนสถานะ",
+                            "name": "change_status"
+                        }
+                    }]
+                }, {
+                    "cols": [{
+                        "type": "grid",
+                        "autoHeight": true,
+                        "name": "gridStatusLog",
+                        "mapping": "OrderData.status_log_entity",
+                        "columns": [{
+                                "config": {
+                                    "text": "สถานะ",
+                                    "dataIndex": "value_name",
+                                    "flex": 1
+                                }
+                            },
+                            {
+                                "type": "date",
+                                "config": {
+                                    "text": "วันที่",
+                                    "dataIndex": "log_time"
+                                }
+                            }
+                        ]
+                    }]
+                }]
+            }
+        }, {
+            "fieldset": {
+                "title": "สถานะการติดตาม",
+                "rows": [{
+                    "cols": [{
+                        "cls": "col-md-6",
+                        "type": "combobox",
+                        "data": [{
+                            "id": 1,
+                            "label": "ติดตามให้จัดส่ง"
+                        }, {
+                            "id": 2,
+                            "label": "จัดส่งสินค้า"
+                        }, {
+                            "id": 3,
+                            "label": "ยกเลิกรายการ"
+                        }, {
+                            "id": 4,
+                            "label": "Close"
+                        }],
+                        "editable": {
+                            "view": 1
+                        },
+                        "config": {
+                            "fieldLabel": "สถานะ",
+                            "displayField": "label",
+                            "valueField": "id",
+                            "name": "track_status_id"
+                        }
+                    }]
+                }, {
+                    "cols": [{
+                        "type": "textarea",
+                        "editable": {
+                            "view": 1
+                        },
+                        "config": {
+                            "fieldLabel": "เหตุผลการติดตาม",
+                            "name": "track_reason"
+                        }
+                    }]
+                }, {
+                    "cols": [{
+                        "cls": "col-md-6",
+                        "type": "button",
+                        "config": {
+                            "fieldLabel": "",
+                            "text": "ยืนยันการติดตาม",
+                            "name": "change_track_status"
+                        }
+                    }]
+                }, {
+                    "cols": [{
+                        "type": "grid",
+                        "autoHeight": true,
+                        "name": "gridStatusTracking",
+                        "data": {
+                            "mongo": {
+                                "query": "('t_e_order_tracking').find({ e_order_id: {{id}} })",
+                                "params": {
+                                    "id": "@params.e_order_id"
+                                }
+                            }
+                        },
+                        "features": [{
+                            "type": "rowbody",
+                            "tpl": [
+                                "<div style='margin: 5px 10px 10px; border: solid 1px #cfcfcf'>",
+                                "   <div style='padding: 5px 10px 0 10px'>เหตุผลการติดตาม:</div>",
+                                "   <div style='padding: 5px 10px'>{reason}</div>",
+                                "</div>"
+                            ]
+                        }],
+                        "columns": [{
+                            "mapping": "status.name",
+                            "config": {
+                                "text": "สถานะ",
+                                "dataIndex": "status",
+                                "flex": 1
+                            }
+                        }, {
+                            "mapping": "create_by.name",
+                            "config": {
+                                "text": "เจ้าหน้าที่",
+                                "dataIndex": "create_by",
+                                "flex": 1
+                            }
+                        }, {
+                            "type": "date",
+                            "config": {
+                                "text": "วันที่",
+                                "dataIndex": "create_date"
+                            }
+                        }]
+                    }]
+                }]
+            }
         }]
     }]
 }

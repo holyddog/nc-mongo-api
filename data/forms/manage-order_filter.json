@@ -103,6 +103,14 @@
                                     "dataIndex": "status_entity",
                                     "width": 150
                                 }
+                            },
+                            {
+                                "mapping": "sc_entity.ct_name",
+                                "config": {
+                                    "text": "ช่องทางสั่งซื้อ",
+                                    "dataIndex": "sc_entity",
+                                    "width": 200
+                                }
                             }
                         ]
                     }]
