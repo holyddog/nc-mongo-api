@@ -9,6 +9,7 @@ import { Translation as t } from '../translate/translation';
 import { Config } from '../config';
 import { FormModel } from '../models/form.model';
 import { ErrorModel } from '../models/error.model';
+import { DateTime } from '../../node_modules/@types/mssql';
 
 export class FormApi {
     private forms: mongodb.Collection;
@@ -40,31 +41,39 @@ export class FormApi {
         let saveData: any = {};
         let nullData: any = {};
         let hasNull: boolean = false;
-        for (let i of bd.data) {
-            if (i.type == 'date') {
-                if (i.sysDate) {
-                    i.value = new Date();
-                }
-                else if (i.value != null) {
-                    i.value = new Date(i.value);
-                }
-            }
 
-            if (i.value != null) {
-                if (i.type == 'currency') {
-                    i.value = mongodb.Decimal128.fromString(i.value.toString());
+        for (let index in bd.data) {
+            let value: any = bd.data[index];
+            if (value != null) {
+                if (value instanceof Array) {
+                    for (let i of value) {
+                        for (let j in i) {
+                            if (typeof i[j] == 'object') {
+                                if (i[j].type == 'date' && i[j].value) {
+                                    i[j] = new Date(i[j].value);
+                                }
+                            }
+                        }
+                    }                  
                 }
-                saveData[i.field] = i.value;
+                else if (typeof value == 'object') {
+                    if (value.type == 'date' && value.value) {
+                        value = new Date(value.value);
+                    }
+                }
+                saveData[index] = value;
             }
             else {
                 hasNull = true;
-                nullData[i.field] = 1;
+                nullData[index] = 1;
             }
         }
+
         let update: any = { $set: saveData };
         if (hasNull) {
             update = { $set: saveData, $unset: nullData };
         }
+
         this.dataDB.collection(bd.collection).update(bd.filter, update)
             .then(() => res.json({
                 success: true
@@ -82,14 +91,30 @@ export class FormApi {
 
         if (!(bd.data instanceof Array)) {
             let saveData: any = {};
-            api.getNextSeq(this.dataDB, bd.collection)
+
+            let insertData: Promise<any>;
+            if (!bd.pk) {
+                insertData = api.getNextSeq(this.dataDB, bd.collection);
+            }
+            else {                
+                insertData = Promise.resolve();
+            }
+
+            insertData
                 .then(id => {
-                    saveData[bd.pk] = id;
+                    if (id && bd.pk) {
+                        saveData[bd.pk] = id;
+                    }
 
                     for (let i in bd.data) {
                         var d = bd.data[i];
                         if (typeof d == 'object' && d.type == 'date') {
-                            bd.data[i] = new Date(d.value);
+                            if (d.value == '@DATE') {
+                                bd.data[i] = new Date();
+                            }
+                            else {
+                                bd.data[i] = new Date(d.value);
+                            }
                         }
                     }
                     return this.dataDB.collection(bd.collection).insert(Object.assign(saveData, bd.data));
@@ -110,10 +135,12 @@ export class FormApi {
                     var d = data[i];
                     if (d) {
                         if (typeof d == 'object' && d.type == 'date') {
-                            data[i] = new Date(d.value);
-                        }
-                        else if (d == '@DATE') {
-                            data[i] = now;
+                            if (d.value == '@DATE') {
+                                data[i] = new Date();
+                            }
+                            else {
+                                data[i] = new Date(d.value);
+                            }
                         }
                     }
                 }
