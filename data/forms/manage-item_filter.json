@@ -67,9 +67,19 @@
                         "type": "grid",
                         "selModel": true,
                         "name": "gridItems",
+                        "tbar": [{
+                            "text": "อนุมัติ",
+                            "cls": "ext-primary",
+                            "name": "btnApprove"
+                        }, {
+                            "text": "ยกเลิกอนุมัติ",
+                            "cls": "ext-red",
+                            "name": "btnUnapprove"
+                        }],
                         "paging": {
                             "mongo": {
                                 "collection": "t_ct_qo",
+                                "sort": { "create_date": -1 },
                                 "filter": [
                                     "barcode",
                                     "outlet_name",
@@ -88,12 +98,12 @@
                                 "       <tpl if='sc_doc_type == 100120'>",
                                 "           <table style='width: 100%; margin: 0 0 10px 0' border='1' bordercolor='#cfcfcf'>",
                                 "               <tr>",
-                                "                   <th class='text-center' style='font-weight: 300; padding: 5px 10px' colspan='3'>{sc_name}</th>",
+                                "                   <th class='text-center' style='font-weight: 300; padding: 7px 10px; color: #666' colspan='3'>{sc_name}</th>",
                                 "               </tr>",
                                 "               <tr>",
-                                "                   <th style='font-weight: 300; padding: 5px 10px'>เริ่มต้น</th>",
-                                "                   <th style='font-weight: 300; padding: 5px 10px'>สิ้นสุด</th>",
-                                "                   <th style='font-weight: 300; padding: 5px 10px'>ราคาส่ง</th>",
+                                "                   <th style='font-weight: 300; padding: 7px 10px; color: #666'>เริ่มต้น</th>",
+                                "                   <th style='font-weight: 300; padding: 7px 10px; color: #666'>สิ้นสุด</th>",
+                                "                   <th style='font-weight: 300; padding: 7px 10px; color: #666'>ราคาส่ง</th>",
                                 "               </tr>",
                                 "               <tpl for='price_list'>",
                                 "                   <tr>",
@@ -107,13 +117,13 @@
                                 "       <tpl if='sc_doc_type == 100121'>",
                                 "           <table style='width: 100%; margin: 0 0 10px 0' border='1' bordercolor='#cfcfcf'>",
                                 "               <tr>",
-                                "                   <th class='text-center' style='font-weight: 300; padding: 5px 10px' colspan='4'>{sc_name}</th>",
+                                "                   <th class='text-center' style='font-weight: 300; padding: 7px 10px; color: #666' colspan='4'>{sc_name}</th>",
                                 "               </tr>",
                                 "               <tr>",
-                                "                   <th style='font-weight: 300; padding: 5px 10px'>จำนวน</th>",
-                                "                   <th style='font-weight: 300; padding: 5px 10px'>ราคาขาย</th>",
-                                "                   <th style='font-weight: 300; padding: 5px 10px'>ราคาส่ง</th>",
-                                "                   <th style='font-weight: 300; padding: 5px 10px'>กำไรต่อชิ้น</th>",
+                                "                   <th style='font-weight: 300; padding: 7px 10px; color: #666'>จำนวน</th>",
+                                "                   <th style='font-weight: 300; padding: 7px 10px; color: #666'>ราคาขาย</th>",
+                                "                   <th style='font-weight: 300; padding: 7px 10px; color: #666'>ราคาส่ง</th>",
+                                "                   <th style='font-weight: 300; padding: 7px 10px; color: #666'>กำไรต่อชิ้น</th>",
                                 "               </tr>",
                                 "               <tpl for='price_list'>",
                                 "                   <tr>",
@@ -169,6 +179,20 @@
                                     "text": "ราคาขาย",
                                     "dataIndex": "items",
                                     "width": 150
+                                }
+                            },
+                            {
+                                "type": "checkbox",
+                                "config": {
+                                    "text": "อนุมัติ",
+                                    "dataIndex": "approved"
+                                }
+                            },
+                            {
+                                "type": "checkbox",
+                                "config": {
+                                    "text": "ไม่ใช้งาน",
+                                    "dataIndex": "inactive"
                                 }
                             }
                         ]

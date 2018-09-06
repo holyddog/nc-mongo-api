@@ -50,6 +50,7 @@
                     "type": "date",
                     "mapping": "OrderData.e_order_time",
                     "config": {
+                        "format": "d/m/Y H:i",
                         "fieldLabel": "วันที่สั่งซื้อ",
                         "name": "e_order_time"
                     }
@@ -103,10 +104,19 @@
             }, {
                 "cols": [{
                     "type": "text",
-                    "mapping": "OrderData.reg_outlet_name",
+                    "mapping": "OrderData.outlet_name",
                     "config": {
                         "fieldLabel": "ชื่อร้านค้า",
                         "name": "reg_outlet_name"
+                    }
+                }]
+            }, {
+                "cols": [{
+                    "type": "text",
+                    "mapping": "OrderData.reg_outlet_name",
+                    "config": {
+                        "fieldLabel": "ชื่อผู้ผลิต",
+                        "name": "outlet_name"
                     }
                 }]
             }, {
@@ -184,6 +194,7 @@
                         "autoHeight": true,
                         "name": "gridStatusLog",
                         "mapping": "OrderData.status_log_entity",
+                        "sort": { "log_time": -1 },
                         "columns": [{
                                 "config": {
                                     "text": "สถานะ",
@@ -258,6 +269,7 @@
                         "type": "grid",
                         "autoHeight": true,
                         "name": "gridStatusTracking",
+                        "sort": { "create_date": -1 },
                         "data": {
                             "mongo": {
                                 "query": "('t_e_order_tracking').find({ e_order_id: {{id}} })",

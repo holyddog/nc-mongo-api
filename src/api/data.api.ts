@@ -103,6 +103,10 @@ export class DataApi {
 
         let resultData: any[] = [];
         let queryExpr: string = `this.dataDB.collection('${bd.collection}').find(${bd.find})`;
+        if (bd.sort) {
+            queryExpr += `.sort(${bd.sort})`;
+        }
+
         eval(queryExpr)
             .skip(start)
             .limit(limit)

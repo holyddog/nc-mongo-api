@@ -7,6 +7,15 @@
         "text": "approve",
         "icon": "fa-check",
         "name": "tbarApprove",
+        "cls": "ext-primary",
+        "action": {
+            "type": "custom"
+        }
+    }, {
+        "text": "unapprove",
+        "icon": "fa-times",
+        "name": "tbarUnapprove",
+        "cls": "ext-red",
         "action": {
             "type": "custom"
         }
@@ -171,6 +180,27 @@
                             "displayField": "isg_name",
                             "valueField": "isg_id",
                             "name": "isg_id"
+                        }
+                    }]
+                },
+                {
+                    "cols": [{
+                        "cls": "col-md-6",
+                        "type": "checkbox",
+                        "mapping": "ItemData.approved",
+                        "autoLoad": false,
+                        "config": {
+                            "fieldLabel": "อนุมัติ",
+                            "name": "approved"
+                        }
+                    }, {
+                        "cls": "col-md-6",
+                        "type": "checkbox",
+                        "mapping": "ItemData.inactive",
+                        "autoLoad": false,
+                        "config": {
+                            "fieldLabel": "ไม่ใช้งาน",
+                            "name": "inactive"
                         }
                     }]
                 }

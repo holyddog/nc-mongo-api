@@ -44,7 +44,7 @@ export class FormApi {
 
         for (let index in bd.data) {
             let value: any = bd.data[index];
-            if (value != null) {
+            if (value || value === 0 || value === false) {
                 if (value instanceof Array) {
                     for (let i of value) {
                         for (let j in i) {
@@ -74,7 +74,11 @@ export class FormApi {
             update = { $set: saveData, $unset: nullData };
         }
 
-        this.dataDB.collection(bd.collection).update(bd.filter, update)
+        let multi: boolean = false;
+        if (bd.multi == true) {
+            multi = true;
+        }
+        this.dataDB.collection(bd.collection).update(bd.filter, update, { multi: multi })
             .then(() => res.json({
                 success: true
             }))
