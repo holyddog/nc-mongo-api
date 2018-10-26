@@ -6,14 +6,13 @@ import * as api from '../../../base-api';
 export class BookingApi {
     private db: mongodb.Db;
     private bookings: mongodb.Collection;
-    private sliders: mongodb.Collection;
 
-    constructor(db: mongodb.Db, app: express.Express) {
+    constructor(db: mongodb.Db, router: express.Router) {
         this.db = db;
 
         this.bookings = db.collection('t_e_booking');
 
-        app.post('/dbd/bookings', (req, res) => {
+        router.post('/dbd/bookings', (req, res) => {
             this.addBooking(req, res);
         });
     }

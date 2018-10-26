@@ -15,22 +15,22 @@ export class FormApi {
     private forms: mongodb.Collection;
     private dataDB: mongodb.Db;
 
-    constructor(dataDB: mongodb.Db, app: express.Express) {
+    constructor(dataDB: mongodb.Db, router: express.Router) {
         this.dataDB = dataDB;
 
-        app.get('/forms/:id', (req, res) => {
+        router.get('/forms/:id', (req, res) => {
             this.findFormById(req, res);
         });
 
-        app.get('/menu', (req, res) => {
+        router.get('/menu', (req, res) => {
             this.findMenu(req, res);
         });
 
-        app.post('/forms', (req, res) => {
+        router.post('/forms', (req, res) => {
             this.insertFormData(req, res);
         });
 
-        app.put('/forms', (req, res) => {
+        router.put('/forms', (req, res) => {
             this.updateFormData(req, res);
         });
     }
@@ -42,36 +42,89 @@ export class FormApi {
         let nullData: any = {};
         let hasNull: boolean = false;
 
-        for (let index in bd.data) {
-            let value: any = bd.data[index];
-            if (value || value === 0 || value === false) {
-                if (value instanceof Array) {
-                    for (let i of value) {
-                        for (let j in i) {
-                            if (typeof i[j] == 'object') {
-                                if (i[j].type == 'date' && i[j].value) {
-                                    i[j] = new Date(i[j].value);
-                                }
+        // for (let index in bd.data) {
+        //     let value: any = bd.data[index];
+        //     if (value || value === 0 || value === false) {
+        //         if (value instanceof Array) {
+        //             for (let i of value) {
+        //                 for (let j in i) {
+        //                     if (i[j] === '@DATE') {
+        //                         i[j] = new Date();
+        //                     }
+        //                     else if (typeof i[j] == 'object') {
+        //                         if (i[j].type == 'date' && i[j].value) {
+        //                             i[j] = new Date(i[j].value);
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //         else if (value === '@DATE') {
+        //             value = new Date();
+        //         }
+        //         else if (typeof value == 'object') {
+        //             if (value.type == 'date' && value.value) {
+        //                 value = new Date(value.value);
+        //             }
+        //         }
+        //         saveData[index] = value;
+        //     }
+        //     else {
+        //         hasNull = true;
+        //         nullData[index] = 1;
+        //     }
+        // }
+
+        var fetch = (data, parent = null, key = null) => {
+            if (data) {
+                for (let i in data) {
+                    if (typeof data[i] == 'object') {
+                        fetch(data[i], data, i);
+                    } else {
+                        if (data[i] != null) {
+                            var regex = /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/;
+                            if (regex.test(data[i])) {
+                                data[i] = new Date(data[i]);
+                            }
+                            else if (data[i] === '@DATE') {
+                                data[i] = new Date();
                             }
                         }
-                    }                  
-                }
-                else if (typeof value == 'object') {
-                    if (value.type == 'date' && value.value) {
-                        value = new Date(value.value);
+
+                        if (data[i] == null) {
+                            hasNull = true;
+                            if (parent && parent[key]) {
+                                nullData[key] = 1;                                
+                                delete parent[key];
+                            }
+                            else {
+                                nullData[i] = 1;
+                                delete data[i];
+                            }
+                        }
+                        else {
+                            // if (parent && parent[key])
+                            // else
+                            //     delete data[i];
+                            // if (parent && parent[key])
+                            //     saveData[key] = data[i];
+                            // else
+                            //     saveData[i] = data[i];
+                        }
                     }
                 }
-                saveData[index] = value;
             }
             else {
                 hasNull = true;
-                nullData[index] = 1;
+                nullData[key] = 1;
+                delete bd.data[key];
             }
         }
+        fetch(bd.data);
 
-        let update: any = { $set: saveData };
+        let update: any = { $set: bd.data };
         if (hasNull) {
-            update = { $set: saveData, $unset: nullData };
+            update['$unset'] = nullData;
         }
 
         let multi: boolean = false;
@@ -97,10 +150,10 @@ export class FormApi {
             let saveData: any = {};
 
             let insertData: Promise<any>;
-            if (!bd.pk) {
+            if (bd.pk) {
                 insertData = api.getNextSeq(this.dataDB, bd.collection);
             }
-            else {                
+            else {
                 insertData = Promise.resolve();
             }
 
@@ -110,24 +163,41 @@ export class FormApi {
                         saveData[bd.pk] = id;
                     }
 
-                    for (let i in bd.data) {
-                        var d = bd.data[i];
-                        if (typeof d == 'object' && d.type == 'date') {
-                            if (d.value == '@DATE') {
-                                bd.data[i] = new Date();
-                            }
-                            else {
-                                bd.data[i] = new Date(d.value);
+                    var fetch = (data, parent = null, key = null) => {
+                        if (data) {
+                            for (let i in data) {
+                                if (typeof data[i] == 'object') {
+                                    fetch(data[i], data, i);
+                                } else {
+                                    if (data[i] != null) {
+                                        var regex = /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/;
+                                        if (regex.test(data[i])) {
+                                            data[i] = new Date(data[i]);
+                                        }
+                                        else if (data[i] === '@DATE') {
+                                            data[i] = new Date();
+                                        }
+                                    }
+                                    else {
+                                        delete data[i];
+                                    }
+                                }
                             }
                         }
                     }
+                    fetch(bd.data);
+
                     return this.dataDB.collection(bd.collection).insert(Object.assign(saveData, bd.data));
                 })
-                .then(() => res.json({
-                    success: true,
-                    id: saveData[bd.pk]
-                }))
+                .then(() => {
+                    var result = {
+                        success: true
+                    };
+                    result[bd.pk] = saveData[bd.pk]
+                    res.json(result);
+                })
                 .catch(err => {
+                    console.log(err);
                     res.json(new ErrorModel(
                         `Internal service error.`
                     ));
@@ -174,7 +244,13 @@ export class FormApi {
     findMenu(req, res) {
         fs.readFile(Config.DataDir + '/menu.json', 'utf8', (err, data) => {
             if (!err) {
-                res.json(JSON.parse(data));
+                try {
+                    var jsonData = JSON.parse(data);
+                    res.json(jsonData);
+                }
+                catch (e) {
+                    res.json(new ErrorModel(e.message));
+                }
             }
             else {
                 res.json({});
@@ -240,7 +316,7 @@ export class FormApi {
                                 c.data.api.url = this._getUrl(c.data.api.url);
                             }
                         }
-                        else if (c.paging) {                            
+                        else if (c.paging) {
                             if (c.paging.api && c.paging.api.url) {
                                 c.paging.api.url = this._getUrl(c.paging.api.url);
                             }
@@ -282,6 +358,11 @@ export class FormApi {
             var formData = data.data;
             var index = 0;
             return new Promise(async (success, error) => {
+                if (!formData) {
+                    success(data);
+                    return;
+                }
+
                 for (let i of formData) {
                     if (i.container) {
                         for (let con of i.container) {
@@ -314,17 +395,23 @@ export class FormApi {
 
         fs.readFile(Config.DataDir + '/forms/' + req.params.id + '.json', 'utf8', (err, data) => {
             if (!err) {
-                prepareData(JSON.parse(data))
-                    .then(resultData => {
-                        fs.exists(Config.DataDir + '/scripts/' + req.params.id + '.js', (exists: boolean) => {
-                            resultData.script = exists;
-                            res.json(resultData);
-                        });
+                try {
+                    var jsonData = JSON.parse(data);
+                    prepareData(jsonData)
+                        .then(resultData => {
+                            fs.exists(Config.DataDir + '/scripts/' + req.params.id + '.js', (exists: boolean) => {
+                                resultData.script = exists;
+                                res.json(resultData);
+                            });
 
-                    })
-                    .catch(err => {
-                        res.json(err);
-                    });
+                        })
+                        .catch(err => {
+                            res.json(err);
+                        });
+                }
+                catch (e) {
+                    res.json(new ErrorModel(e.message));
+                }
             }
             else {
                 res.json(new ErrorModel(t.translate('form_not_found', req.query.lang)));

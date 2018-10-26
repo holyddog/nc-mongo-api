@@ -17,9 +17,10 @@
                             "cols": [{
                                 "cls": "col-md-6",
                                 "type": "combobox",
+                                "ws": [0, 1],
                                 "data": {
                                     "mongo": {
-                                        "query": "('zz_workspace').find({}, { wsp_id: 1, wsp_name: 1 })"
+                                        "collection": "zz_workspace"
                                     }
                                 },
                                 "config": {
@@ -31,7 +32,6 @@
                             }, {
                                 "cls": "col-md-6",
                                 "type": "text",
-                                "query": "{ $regex: \"^.*{{value}}.*$\", $options: \"i\" }",
                                 "config": {
                                     "fieldLabel": "ชื่อร้านค้า",
                                     "name": "outlet_name"
@@ -43,7 +43,12 @@
                                 "type": "combobox",
                                 "data": {
                                     "mongo": {
-                                        "query": "('z_province').find({}, { province_id: 1, province_name: 1 })"
+                                        "collection": "z_province",
+                                        "find": {
+                                            "inactive": {
+                                                "$ne": true
+                                            }
+                                        }
                                     }
                                 },
                                 "config": {
@@ -77,6 +82,12 @@
                             "cols": [{
                                 "type": "button",
                                 "export": true,
+                                "resets": [
+                                    "outlet_name",
+                                    "wsp_id",
+                                    "province_id",
+                                    "activated"
+                                ],
                                 "filter": "gridShops"
                             }]
                         }
@@ -93,26 +104,37 @@
                         "paging": {
                             "mongo": {
                                 "collection": "t_outlet_regis",
-                                "filter": [
-                                    "outlet_name",
-                                    "wsp_id",
-                                    "province_id",
-                                    "activated"
-                                ]
+                                "find": {
+                                    "wsp_id": "@center.ws.wsp_id",
+                                    "province_id": "@province_id",
+                                    "outlet_name": {
+                                        "$regex": "^.*@outlet_name.*$",
+                                        "$options": "i"
+                                    },
+                                    "activated": "@activated"
+                                }
                             }
                         },
                         "columns": [{
+                                "ws": [0],
+                                "config": {
+                                    "text": "WID",
+                                    "dataIndex": "wsp_id",
+                                    "align": "center",
+                                    "width": 80
+                                }
+                            }, {
                                 "config": {
                                     "text": "ชื่อร้านค้า",
                                     "dataIndex": "outlet_name",
-                                    "flex": 1
+                                    "width": 200
                                 }
                             },
                             {
                                 "config": {
                                     "text": "คำอธิบาย",
                                     "dataIndex": "outlet_name",
-                                    "flex": 1
+                                    "width": 200
                                 }
                             },
                             {

@@ -6,14 +6,10 @@ import * as mssql from 'mssql';
 
 import * as fileUpload from 'express-fileupload';
 
-import errorHandler = require("errorhandler");
-import methodOverride = require("method-override");
-
 var cors = require('cors');
 
 import { Config } from './config';
 import { OAuth2 } from './oauth2';
-import { Logger } from './logger';
 
 import { FormApi } from './api/form.api';
 import { DataApi } from './api/data.api';
@@ -23,68 +19,69 @@ import { ProductApi as DBD_ProductApi } from './api/backend/dbd/product.api';
 import { BookingApi as DBD_BookingApi } from './api/backend/dbd/booking.api';
 
 export class Server {
+    public prefix: string;
     public app: express.Express;
-    public callback: any;
+    public router: express.Router;
 
-    public static bootstrap(app, callback): Server {
-        return new Server(app, callback);
-    };
-
-    constructor(app, callback) {
+    constructor(app, router, prefix) {
         if (app) {
             this.app = app;
-            this.callback = callback;
+            this.router = router;
+            this.prefix = prefix;
         }
         else {
             this.app = express();
+            this.router = express.Router();
         }
+    }
 
-        this.config().then((config: any) => {
-            let dataDB: mongodb.Db = config.dataDB;
-            let sqlDB: mssql.ConnectionPool = config.sqlDB;
+    public run(): Promise<any> {       
+        return this.config()
+            .then((config: any) => {
+                let dataDB: mongodb.Db = config.dataDB;
+                let sqlDB: mssql.ConnectionPool = config.sqlDB;
 
-            // let request: mssql.Request = new mssql.Request(sqlDB);
-            // request
-            //     .input('qty', mssql.Int, 5)
-            //     .query('select LOGIN_NAME from z_user where usr_id < @qty')
-            //     .then((data: mssql.IResult<any>) => {
-            //         console.log(data.recordset);
-            //     });
+                // let request: mssql.Request = new mssql.Request(sqlDB);
+                // request
+                //     .input('qty', mssql.Int, 5)
+                //     .query('select LOGIN_NAME from z_user where usr_id < @qty')
+                //     .then((data: mssql.IResult<any>) => {
+                //         console.log(data.recordset);
+                //     });
 
-            new OAuth2(this.app, dataDB);
+                new OAuth2(this.app, dataDB);
+                this.api(dataDB);
 
-            this.api(dataDB);
-        });
+                return Promise.resolve();
+            });
     }
 
     public api(dataDB: mongodb.Db) {
         let app = this.app;
         app.disable('etag');
 
-        new FormApi(dataDB, app);
-        new DataApi(dataDB, app);
-        new FileApi(dataDB, app);
+        new FormApi(dataDB, this.router);
+        new DataApi(dataDB, this.router);
+        new FileApi(dataDB, this.router);
 
-        new DBD_ProductApi(dataDB, app);
-        new DBD_BookingApi(dataDB, app);
+        new DBD_ProductApi(dataDB, this.router);
+        new DBD_BookingApi(dataDB, this.router);
 
-        app.get('/version', (req, res) => {
+        this.router.get('/version', (req, res) => {
             let v = Config.Version;
 
             res.json({ version: `${v.base}.${v.major}.${v.minor}` });
         });
 
-        if (this.callback != 'function') {
-            let server = app.listen(Config.Port, () => {
-                Logger.info(`Listening on: ${Config.Port}` + ' at ' + new Date().toString());
-    
-                let v = Config.Version;
-                Logger.info(Config.AppName + ` version ${v.base}.${v.major}.${v.minor}`);
-            });
+        if (!this.prefix) {
+            app.use("/", this.router);
+        }
+        else {
+            app.use(this.prefix, this.router);
         }
     }
 
-    public async config() {
+    public config() {
         let app = this.app;
 
         app.use(cookieParser('nc-mongo-api'));

@@ -29,5 +29,31 @@
         "roles": [
             "admin"
         ]
+    },
+    {
+        "name": "Sample",
+        "icon": "fa-flask",
+        "roles": [
+            "admin"
+        ],
+        "children": [{
+            "link": "/form/sample_form",
+            "name": "Sample Form",
+            "roles": [
+                "admin"
+            ]
+        }, {
+            "link": "/form/sample_filter",
+            "name": "Sample Filter",
+            "roles": [
+                "admin"
+            ]
+        }, {
+            "link": "/form/sample-find_filter",
+            "name": "Sample Find Filter",
+            "roles": [
+                "admin"
+            ]
+        }]
     }
 ]

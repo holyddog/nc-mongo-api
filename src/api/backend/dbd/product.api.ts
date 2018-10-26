@@ -6,18 +6,18 @@ import { ErrorModel } from '../../../models/error.model';
 export class ProductApi {
     private products: mongodb.Collection;
 
-    constructor(db: mongodb.Db, app: express.Express) {
+    constructor(db: mongodb.Db, router: express.Router) {
         this.products = db.collection('t_ct_qo');
 
-        app.get('/dbd/categories', (req, res) => {
+        router.get('/dbd/categories', (req, res) => {
             this.getProductCategories(req, res);
         });
 
-        app.get('/dbd/products', (req, res) => {
+        router.get('/dbd/products', (req, res) => {
             this.getProducts(req, res);
         });
 
-        app.get('/dbd/products/:id', (req, res) => {
+        router.get('/dbd/products/:id', (req, res) => {
             this.getProductById(req, res);
         });
     }

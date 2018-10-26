@@ -1,5 +1,5 @@
 export const Config = {
-    MongoUri: 'mongodb://localhost:27017/ECV_DEV', 
+    MongoUri: 'mongodb://localhost:27017/ecv-dev', 
 
     // MSSQL: {
     //     user: 'sa',
@@ -9,16 +9,15 @@ export const Config = {
     // },
 
     API: {
-        ECV_UAT: 'http://27.254.138.120:3201/dev/ecv/POS-OnlineService',
+        ECV_UAT: 'http://203.154.51.244/dev/SP-OnlineService',
         IMAGE_PATH: 'http://27.254.138.120:3207/files'
     },
     
-    Port: 3000,
     FilePath: '/files',
 
-    DataDir: 'F:/Workspace/Node.js/nc-mongo-api/data',
-    FileDir: 'F:/Workspace/Node.js/nc-mongo-api/public',
-    LogDir: 'F:/Workspace/Node.js/nc-mongo-api/log',
+    DataDir: 'E:/Workspace/Me/New NC/nc-mongo-api/data',
+    FileDir: 'E:/Workspace/Me/New NC/nc-mongo-api/public',
+    LogDir: 'E:/Workspace/Me/New NC/nc-mongo-api/log',
 
     AppName: 'NC Mongo API',
 

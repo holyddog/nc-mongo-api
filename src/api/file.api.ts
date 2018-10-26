@@ -16,22 +16,26 @@ import { ErrorModel } from '../models/error.model';
 export class FileApi {
     private dataDB: mongodb.Db;
 
-    constructor(dataDB: mongodb.Db, app: express.Express) {
+    constructor(dataDB: mongodb.Db, router: express.Router) {
         this.dataDB = dataDB;
 
-        app.post('/upload/pictures', (req, res) => {
+        router.post('/upload/pictures', (req, res) => {
             this.uploadPicture(req, res);
         });
 
-        app.post('/read-excel', (req, res) => {
+        router.post('/excel/read', (req, res) => {
             this.readExcel(req, res);
         });
 
-        app.post('/export-excel', (req, res) => {
+        router.post('/excel/export', (req, res) => {
             this.exportExcel(req, res);
         });
 
-        app.get('/js/:id', (req, res) => {
+        router.get('/download', (req, res) => {
+            this.download(req, res);
+        });
+
+        router.get('/js/:id', (req, res) => {
             this.getFormScript(req, res);
         });
     }
@@ -110,69 +114,162 @@ export class FileApi {
             });
     }
 
-    exportExcel(req, res) {
-        let bd: any = JSON.parse(req.body.data);
-        console.log(bd);
+    fetchData(bd: any): Promise<any> {
+        let resultData: any[] = [];
+        let limit: number = 10000;
+        if (!bd.aggregate) {
+            var promise = this.dataDB.collection(bd.collection).find(bd.find);
+            if (bd.sort) {
+                promise = promise.sort(bd.sort);
+            }
 
-        if (bd.find) {
-            while (bd.find.indexOf('"ISODate') > -1) {
-                bd.find = bd.find.replace('"ISODate', 'new Date').replace(')"', ')');
+            return promise
+                .limit(limit)
+                .toArray();
+        }
+        else {
+            let aggList: any[] = [];
+            if (bd.find) {
+                var fetch = function (data) {
+                    if (data) {
+                        for (let i in data) {
+                            if (typeof data[i] == 'object') {
+                                fetch(data[i]);
+                            }
+                            else {
+                                var regex = /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/;
+                                if (regex.test(data[i])) {
+                                    data[i] = new Date(data[i]);
+                                }
+                            }
+                        }
+                    }
+                }
+                fetch(bd.find);
+
+                aggList.push({
+                    $match: bd.find
+                });
+            }
+            if (bd.aggregate) {
+                var agg = [];
+                for (let a of bd.aggregate) {
+                    var hasValue = true;
+                    if (a["$match"]) {
+                        var fetch = function (data) {
+                            if (data) {
+                                for (let i in data) {
+                                    if (typeof data[i] == 'object') {
+                                        fetch(data[i]);
+                                    }
+                                    else {
+                                        if (typeof data[i] == 'string' && /!?(@\w+)/i.test(data[i])) {
+                                            hasValue = false;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        fetch(a);
+                    }
+
+                    if (hasValue) {
+                        agg.push(a);
+                    }
+                }
+                aggList = aggList.concat(agg);
+            }
+
+            var aggFind = aggList;
+            if (bd.sort) {
+                aggFind.push({
+                    $sort: bd.sort
+                });
+            }
+
+            return this.dataDB.collection(bd.collection).aggregate(aggFind.concat([
+                { $limit: limit }
+            ])).toArray();
+        }
+    }
+
+    download(req, res) {
+        let filePath = Config.FileDir + req.query.path;
+        let fileName = req.query.name;
+        var rs = fs.createReadStream(filePath);
+        fs.unlink(filePath, (err) => {
+            if (err) throw err;
+
+            if (!fileName) {
+                fileName = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.length);
+            }
+            res.attachment(fileName);
+            rs.pipe(res);
+        });
+    }
+
+    exportExcel(req, res) {
+        let bd: any = req.body;
+        let columns: any = bd.columns;var styles = {
+            headerDark: {
+                font: {
+                    bold: true
+                }
+            }
+        };
+
+        var specification = {};
+        for (let c of columns) {
+            specification[c.dataIndex] = {
+                displayName: c.text,
+                headerStyle: styles.headerDark
+            };
+
+            if (c.width) {
+                specification[c.dataIndex].width = c.width;
             }
         }
 
-        let queryExpr: string = `this.dataDB.collection('${bd.collection}').find(${bd.find}, { _id: 0 })`;
-        eval(queryExpr)
-            .toArray()
-            .then(data => {
-                console.log(data);
-
-                const styles = {
-                    headerDark: {
-                        font: {
-                            bold: true
+        this.fetchData(bd.filter).then(data => {
+            for (let i of data) {
+                for (let c of columns.filter(o => { return o.mapping; })) {
+                    var z = c.dataIndex.split('.');
+                    var value;
+                    var fetch = function(d, index) {
+                        if (d[z[index]] && index < z.length - 1) {
+                            fetch(d[z[index]], index + 1);
+                        }
+                        else {
+                            value = d[z[index]];
                         }
                     }
-                };
+                    fetch(i, 0);
+                    i[c.dataIndex] = value;
+                }
+            }
 
-                const specification = {
-                    customer_name: {
-                        displayName: 'Customer',
-                        headerStyle: styles.headerDark,
-                        width: 120
-                    },
-                    status_id: {
-                        displayName: 'Status',
-                        headerStyle: styles.headerDark,
-                        cellFormat: function (value, row) {
-                            return (value == 1) ? 'Active' : 'Inactive';
-                        },
-                        width: '10'
-                    },
-                    note: {
-                        displayName: 'Description',
-                        headerStyle: styles.headerDark,
-                        width: 220
+            var report = excel.buildExport(
+                [
+                    {
+                        specification: specification,
+                        data: data
                     }
+                ]
+            );
+            
+            var fileName = '/' + api.generateFileName('report.xlsx');
+            var filePath = Config.FileDir + fileName;
+            fs.writeFile(filePath, report, function (err) {
+                if (err) {
+                    return console.log(err);
                 }
 
-                const dataset = [
-                    { customer_name: 'IBM', status_id: 1, note: 'some note', misc: 'not shown' },
-                    { customer_name: 'HP', status_id: 0, note: 'some note' },
-                    { customer_name: 'MS', status_id: 0, note: 'some note', misc: 'not shown' }
-                ]
-
-                const report = excel.buildExport(
-                    [
-                        {
-                            specification: specification,
-                            data: dataset
-                        }
-                    ]
-                );
-
-                res.attachment('report.xlsx');
-                res.send(report);
+                res.json({
+                    path: fileName
+                });
             });
+
+        });
     }
 
     readExcel(req, res) {

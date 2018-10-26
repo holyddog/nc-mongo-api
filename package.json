@@ -1,6 +1,6 @@
 {
-    "name": "ecommerce-api",
-    "description": "E-Commerce API",
+    "name": "nc-mongo-api",
+    "description": "NC Mongo API",
     "version": "1.0.0",
     "private": true,
     "author": "Holy D Dog",
@@ -31,7 +31,7 @@
         "mssql": "^4.1.0",
         "node-excel-export": "^1.4.4",
         "node-forge": "^0.7.5",
-        "npm": "^5.7.1",
+        "npm": "^5.10.0",
         "oauth2orize": "^1.8.0",
         "passport": "^0.3.2",
         "passport-http": "^0.3.0",

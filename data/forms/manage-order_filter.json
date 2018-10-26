@@ -140,7 +140,15 @@
                                 "config": {
                                     "text": "ช่องทางสั่งซื้อ",
                                     "dataIndex": "sc_entity",
-                                    "width": 150
+                                    "width": 120
+                                }
+                            },
+                            {
+                                "mapping": "sc_entity.doc_type",
+                                "config": {
+                                    "text": "Doc Type",
+                                    "dataIndex": "sc_entity",
+                                    "width": 80
                                 }
                             }
                         ]
