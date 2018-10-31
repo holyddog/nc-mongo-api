@@ -18,6 +18,8 @@ import { FileApi } from './api/file.api';
 import { ProductApi as DBD_ProductApi } from './api/backend/dbd/product.api';
 import { BookingApi as DBD_BookingApi } from './api/backend/dbd/booking.api';
 
+import { DocumentFunction } from './api/fn/document.function';
+
 export class Server {
     public prefix: string;
     public app: express.Express;
@@ -66,6 +68,8 @@ export class Server {
 
         new DBD_ProductApi(dataDB, this.router);
         new DBD_BookingApi(dataDB, this.router);
+
+        new DocumentFunction(dataDB, this.router);
 
         this.router.get('/version', (req, res) => {
             let v = Config.Version;

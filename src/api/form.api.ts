@@ -236,7 +236,10 @@ export class FormApi {
         if (/{{.*}}/i.test(url)) {
             let serviceName: string = url.substring(url.indexOf('{{') + 2, url.lastIndexOf('}}'));
             let serviceUrl: string = Config.API[serviceName];
-            return url.replace('{{' + serviceName + '}}', serviceUrl);
+            if (serviceUrl) {
+                return url.replace('{{' + serviceName + '}}', serviceUrl);
+            }
+            return url;
         }
         return url;
     }

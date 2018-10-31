@@ -38,9 +38,17 @@ export class DataApi {
     }
 
     verifyWorkspace(req, res) {
+        var hostPath;
+        var href = req.query.href || '/';
+
+        var refer = req.headers.referer;
+        var protocol = refer.substring(0, refer.indexOf('://') + 3);
+        var host = (hostPath = refer.replace(protocol, '')).substring(0, hostPath.indexOf(href));
+
+        var regex = new RegExp('/$');
+
         this.workspaces.find({
-            "data.hosts": req.headers.origin,
-            "data.path": req.query.href
+            "data.hosts": protocol + host + href.replace(regex, '')
         }, {
                 _id: 0,
                 wsp_id: 1,
