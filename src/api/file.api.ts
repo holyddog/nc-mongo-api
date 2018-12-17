@@ -129,56 +129,34 @@ export class FileApi {
         }
         else {
             let aggList: any[] = [];
-            if (bd.find) {
-                var fetch = function (data) {
-                    if (data) {
-                        for (let i in data) {
-                            if (typeof data[i] == 'object') {
-                                fetch(data[i]);
-                            }
-                            else {
-                                var regex = /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/;
-                                if (regex.test(data[i])) {
-                                    data[i] = new Date(data[i]);
-                                }
-                            }
-                        }
-                    }
-                }
-                fetch(bd.find);
 
-                aggList.push({
-                    $match: bd.find
-                });
-            }
-            if (bd.aggregate) {
-                var agg = [];
-                for (let a of bd.aggregate) {
-                    var hasValue = true;
-                    if (a["$match"]) {
-                        var fetch = function (data) {
-                            if (data) {
-                                for (let i in data) {
-                                    if (typeof data[i] == 'object') {
-                                        fetch(data[i]);
-                                    }
-                                    else {
-                                        if (typeof data[i] == 'string' && /!?(@\w+)/i.test(data[i])) {
-                                            hasValue = false;
-                                        }
+            var agg = [];
+            for (let a of bd.aggregate) {
+                var hasValue = true;
+                if (a["$match"]) {
+                    var fetch = function (data) {
+                        if (data) {
+                            for (let i in data) {
+                                if (typeof data[i] == 'object') {
+                                    fetch(data[i]);
+                                }
+                                else {
+                                    var regex = /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/;
+                                    if (regex.test(data[i])) {
+                                        data[i] = new Date(data[i]);
                                     }
                                 }
                             }
                         }
-                        fetch(a);
                     }
-
-                    if (hasValue) {
-                        agg.push(a);
-                    }
+                    fetch(a["$match"]);
                 }
-                aggList = aggList.concat(agg);
+
+                if (hasValue) {
+                    agg.push(a);
+                }
             }
+            aggList = aggList.concat(agg);
 
             var aggFind = aggList;
             if (bd.sort) {
@@ -189,7 +167,7 @@ export class FileApi {
 
             return this.dataDB.collection(bd.collection).aggregate(aggFind.concat([
                 { $limit: limit }
-            ])).toArray();
+            ])).toArray()
         }
     }
 

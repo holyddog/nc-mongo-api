@@ -79,22 +79,40 @@ export class FormApi {
             if (data) {
                 for (let i in data) {
                     if (typeof data[i] == 'object') {
+                        if (data[i] && data[i].type && (data[i].value != null || data[i].value != undefined)) {
+                            if (data[i].type == 'long') {
+                                data[i] = mongodb.Long.fromNumber(data[i].value);
+                            }
+                            else if (data[i].type == 'double') {
+                                data[i] = new mongodb.Double(data[i].value);
+                            }
+                            else {
+                                data[i] = data[i].value;
+                            }
+                        }
                         fetch(data[i], data, i);
                     } else {
                         if (data[i] != null) {
                             var regex = /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/;
+                            // if (bd.defaultLong && data[i] % 1 == 0) {
+                            //     data[i] = mongodb.Long.fromNumber(data[i]);
+                            // }
+                            
                             if (regex.test(data[i])) {
                                 data[i] = new Date(data[i]);
                             }
                             else if (data[i] === '@DATE') {
                                 data[i] = new Date();
                             }
+                            else if (typeof data[i] == 'string' && /^NumberLong\(\d+\)$/.test(data[i])) {
+                                data[i] = mongodb.Long.fromString(data[i].replace(/\w+/, '').replace('(', '').replace(')', ''));
+                            }
                         }
 
                         if (data[i] == null) {
                             hasNull = true;
                             if (parent && parent[key]) {
-                                nullData[key] = 1;                                
+                                nullData[key] = 1;
                                 delete parent[key];
                             }
                             else {
@@ -167,6 +185,17 @@ export class FormApi {
                         if (data) {
                             for (let i in data) {
                                 if (typeof data[i] == 'object') {
+                                    if (data[i] && data[i].type && (data[i].value != null || data[i].value != undefined)) {
+                                        if (data[i].type == 'long') {
+                                            data[i] = mongodb.Long.fromNumber(data[i].value);
+                                        }
+                                        else if (data[i].type == 'double') {
+                                            data[i] = new mongodb.Double(data[i].value);
+                                        }
+                                        else {
+                                            data[i] = data[i].value;
+                                        }
+                                    }
                                     fetch(data[i], data, i);
                                 } else {
                                     if (data[i] != null) {
@@ -176,6 +205,9 @@ export class FormApi {
                                         }
                                         else if (data[i] === '@DATE') {
                                             data[i] = new Date();
+                                        }
+                                        else if (typeof data[i] == 'string' && /^NumberLong\(\d+\)$/.test(data[i])) {
+                                            data[i] = mongodb.Long.fromString(data[i].replace(/\w+/, '').replace('(', '').replace(')', ''));
                                         }
                                     }
                                     else {
@@ -191,9 +223,11 @@ export class FormApi {
                 })
                 .then(() => {
                     var result = {
-                        success: true
+                        success: true,
+                        key: {}
                     };
-                    result[bd.pk] = saveData[bd.pk]
+                    let keyName: string = bd.pkName || bd.pk;
+                    result.key[keyName] = saveData[bd.pk];
                     res.json(result);
                 })
                 .catch(err => {
@@ -205,19 +239,43 @@ export class FormApi {
         }
         else {
             for (let data of bd.data) {
-                for (let i in data) {
-                    var d = data[i];
-                    if (d) {
-                        if (typeof d == 'object' && d.type == 'date') {
-                            if (d.value == '@DATE') {
-                                data[i] = new Date();
-                            }
-                            else {
-                                data[i] = new Date(d.value);
+                var fetch = (data, parent = null, key = null) => {
+                    if (data) {
+                        for (let i in data) {
+                            if (typeof data[i] == 'object') {
+                                if (data[i] && data[i].type && (data[i].value != null || data[i].value != undefined)) {
+                                    if (data[i].type == 'long') {
+                                        data[i] = mongodb.Long.fromNumber(data[i].value);
+                                    }
+                                    else if (data[i].type == 'double') {
+                                        data[i] = new mongodb.Double(data[i].value);
+                                    }
+                                    else {
+                                        data[i] = data[i].value;
+                                    }
+                                }
+                                fetch(data[i], data, i);
+                            } else {
+                                if (data[i] != null) {
+                                    var regex = /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/;
+                                    if (regex.test(data[i])) {
+                                        data[i] = new Date(data[i]);
+                                    }
+                                    else if (data[i] === '@DATE') {
+                                        data[i] = new Date();
+                                    }
+                                    else if (typeof data[i] == 'string' && /^NumberLong\(\d+\)$/.test(data[i])) {
+                                        data[i] = mongodb.Long.fromString(data[i].replace(/\w+/, '').replace('(', '').replace(')', ''));
+                                    }
+                                }
+                                else {
+                                    delete data[i];
+                                }
                             }
                         }
                     }
                 }
+                fetch(data);
             }
 
             this.dataDB.collection(bd.collection).insertMany(bd.data)
@@ -276,6 +334,9 @@ export class FormApi {
                             let serviceName: string = url.substring(url.indexOf('{{') + 2, url.lastIndexOf('}}'));
                             let serviceUrl: string = Config.API[serviceName];
                             c.imagePath = url.replace('{{' + serviceName + '}}', serviceUrl);
+                        }
+                        if (c.action && c.action.url) {
+                            c.action.url = this._getUrl(c.action.url);
                         }
                         if (c.api && c.api.url) {
                             c.api.url = this._getUrl(c.api.url);
@@ -353,6 +414,21 @@ export class FormApi {
                     for (let i of data.save.update) {
                         if (i.api && i.api.url) {
                             i.api.url = this._getUrl(i.api.url);
+                        }
+                    }
+                }
+            }
+
+            if (data.tbar) {
+                for (let i of data.tbar) {
+                    if (i.action && i.action.url) {
+                        i.action.url = this._getUrl(i.action.url);
+                    }
+                    if (i.action && i.action.type == 'call' && i.action.calls && i.action.calls.length > 0) {
+                        for (let c of i.action.calls) {
+                            if (c.api && c.api.url) {
+                                c.api.url = this._getUrl(c.api.url);
+                            }
                         }
                     }
                 }

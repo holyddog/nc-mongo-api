@@ -32,7 +32,6 @@
                             "cols": [{
                                 "cls": "col-md-6",
                                 "type": "text",
-                                "query": "{ $regex: \"^.*{{value}}.*$\", $options: \"i\" }",
                                 "config": {
                                     "fieldLabel": "ชื่อร้านค้า",
                                     "name": "outlet_name"
@@ -40,7 +39,6 @@
                             }, {
                                 "cls": "col-md-6",
                                 "type": "text",
-                                "query": "{ $regex: \"^.*{{value}}.*$\", $options: \"i\" }",
                                 "config": {
                                     "fieldLabel": "ชื่อผู้ผลิต",
                                     "name": "reg_outlet_name"
@@ -50,7 +48,12 @@
                         {
                             "cols": [{
                                 "type": "button",
-                                "export": true,
+                                "resets": [
+                                    "e_order_no",
+                                    "outlet_name",
+                                    "reg_outlet_name",
+                                    "wsp_id"
+                                ],
                                 "filter": "gridOrders"
                             }]
                         }
@@ -67,13 +70,17 @@
                         "paging": {
                             "mongo": {
                                 "collection": "t_e_order",
-                                "sort": { "e_order_time": -1 },
-                                "filter": [
-                                    "e_order_no",
-                                    "outlet_name",
-                                    "reg_outlet_name",
-                                    "wsp_id"
-                                ]
+                                "find": {
+                                    "reg_outlet_name": {
+                                        "$regex": "^.*@reg_outlet_name.*",
+                                        "option": "i"
+                                    },                                    
+                                    "outlet_name": {
+                                        "$regex": "^.*@outlet_name.*",
+                                        "option": "i"
+                                    }
+                                },
+                                "sort": { "e_order_time": -1 }
                             }
                         },
                         "features": [{

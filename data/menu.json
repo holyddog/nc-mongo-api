@@ -54,6 +54,12 @@
             "roles": [
                 "admin"
             ]
+        }, {
+            "link": "/form/sample-aggregate_filter",
+            "name": "Sample Aggregate Filter",
+            "roles": [
+                "admin"
+            ]
         }]
     }
 ]

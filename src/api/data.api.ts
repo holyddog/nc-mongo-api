@@ -195,7 +195,9 @@ export class DataApi {
             }
             fetch(bd.find);
 
-            var promise = this.dataDB.collection(bd.collection).find(bd.find);
+            let fields: any = bd.fields || {};
+
+            var promise = this.dataDB.collection(bd.collection).find(bd.find, fields);
             if (bd.sort) {
                 promise = promise.sort(bd.sort);
             }
