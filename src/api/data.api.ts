@@ -38,34 +38,57 @@ export class DataApi {
     }
 
     verifyWorkspace(req, res) {
-        var hostPath;
-        var href = req.query.href || '/';
-
-        var refer = req.headers.referer;
-        var protocol = refer.substring(0, refer.indexOf('://') + 3);
-        var host = (hostPath = refer.replace(protocol, '')).substring(0, hostPath.indexOf(href));
-
-        var regex = new RegExp('/$');
-
-        this.workspaces.find({
-            "data.hosts": protocol + host + href.replace(regex, '')
-        }, {
-                _id: 0,
-                wsp_id: 1,
-                wsp_name: 1,
-                "data.app_name": 1,
-                "data.logo": 1
-
-            }).toArray().then(data => {
-                if (data.length > 0) {
-                    res.json(data[0]);
-                }
-                else {
-                    res.json(new ErrorModel(
-                        `Workspace not found.`
-                    ));
-                }
-            });
+        if (req.query.code) {
+            this.workspaces.find({
+                "wsp_code": { $regex: "^" + req.query.code + "$", $options: "i" }
+            }, {
+                    _id: 0,
+                    wsp_id: 1,
+                    wsp_name: 1,
+                    "data.app_name": 1,
+                    "data.logo": 1
+    
+                }).toArray().then(data => {
+                    if (data.length > 0) {
+                        res.json(data[0]);
+                    }
+                    else {
+                        res.json(new ErrorModel(
+                            `Workspace not found.`
+                        ));
+                    }
+                });
+        }
+        else {
+            var hostPath;
+            var href = req.query.href || '/';
+    
+            var refer = req.headers.referer;
+            var protocol = refer.substring(0, refer.indexOf('://') + 3);
+            var host = (hostPath = refer.replace(protocol, '')).substring(0, hostPath.indexOf(href));
+    
+            var regex = new RegExp('/$');
+    
+            this.workspaces.find({
+                "data.hosts": protocol + host + href.replace(regex, '')
+            }, {
+                    _id: 0,
+                    wsp_id: 1,
+                    wsp_name: 1,
+                    "data.app_name": 1,
+                    "data.logo": 1
+    
+                }).toArray().then(data => {
+                    if (data.length > 0) {
+                        res.json(data[0]);
+                    }
+                    else {
+                        res.json(new ErrorModel(
+                            `Workspace not found.`
+                        ));
+                    }
+                });
+        }
     }
 
     pagingData(req, res) {

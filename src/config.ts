@@ -1,5 +1,5 @@
 export const Config = {
-    MongoUri: 'mongodb://localhost:27017/ecv-dev', 
+    MongoUri: 'mongodb://localhost:27017/ecv-uat', 
 
     // MSSQL: {
     //     user: 'sa',
@@ -11,7 +11,7 @@ export const Config = {
     API: {
         ECV_UAT: 'http://203.154.51.244/dev/SP-OnlineService',
         REPORT_URL: 'http://203.154.51.244/dev/ReportManager',
-        IMAGE_PATH: 'http://27.254.138.120:3207/files'
+        IMAGE_PATH: 'https://uat.static.a-farmmart.com'
     },
     
     FilePath: '/files',

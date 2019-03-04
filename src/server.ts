@@ -15,8 +15,9 @@ import { FormApi } from './api/form.api';
 import { DataApi } from './api/data.api';
 import { FileApi } from './api/file.api';
 
-import { ProductApi as DBD_ProductApi } from './api/backend/dbd/product.api';
-import { BookingApi as DBD_BookingApi } from './api/backend/dbd/booking.api';
+import { ProductApi as OC_ProductApi } from './api/backend/oc/product.api';
+import { BookingApi as OC_BookingApi } from './api/backend/oc/booking.api';
+import { WorkspaceApi as OC_WorkspaceApi } from './api/backend/oc/workspace.api';
 
 import { DocumentFunction } from './api/fn/document.function';
 
@@ -66,8 +67,9 @@ export class Server {
         new DataApi(dataDB, this.router);
         new FileApi(dataDB, this.router);
 
-        new DBD_ProductApi(dataDB, this.router);
-        new DBD_BookingApi(dataDB, this.router);
+        new OC_ProductApi(dataDB, this.router);
+        new OC_BookingApi(dataDB, this.router);
+        new OC_WorkspaceApi(dataDB, this.router);
 
         new DocumentFunction(dataDB, this.router);
 
@@ -76,26 +78,24 @@ export class Server {
 
             res.json({ version: `${v.base}.${v.major}.${v.minor}` });
         });
-
-        if (!this.prefix) {
-            app.use("/", this.router);
-        }
-        else {
-            app.use(this.prefix, this.router);
-        }
+        app.use(this.prefix, this.router);
     }
 
     public config() {
         let app = this.app;
 
-        app.use(cookieParser('nc-mongo-api'));
-        app.use(bodyParser.json());
-        app.use(bodyParser.urlencoded({ extended: true }));
-        app.use(cors());
-        app.use(fileUpload());
-        app.use(Config.FilePath, express.static(Config.FileDir));
+        if (!this.prefix) {            
+            this.prefix = "/";
+        }
 
-        app.use(function (req, res, next) {
+        this.router.use(cookieParser('nc-mongo-api'));
+        this.router.use(bodyParser.json());
+        this.router.use(bodyParser.urlencoded({ extended: true }));
+        this.router.use(cors());
+        this.router.use(fileUpload());
+        app.use(this.prefix.replace(/\/$/, '') + Config.FilePath, express.static(Config.FileDir));
+
+        this.router.use(function (req, res, next) {
             res.setHeader('Access-Control-Allow-Origin', '*');
             res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,PUT,PATCH,DELETE');
             res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
